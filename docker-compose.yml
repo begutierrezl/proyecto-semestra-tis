@@ -8,11 +8,7 @@ services:
     ports:
      - 9000:9000
     volumes:
-      - ./src/webpage/:/client
-    depends_on:
-      - db:
-        condition: service_healthy
-        restart: true
+      - ./src/webpage:/client
     env_file:
       - .env
   
@@ -24,7 +20,7 @@ services:
     ports:
       - 8000:8000
     volumes:
-      - ./src/backend/:/server
+      - ./src/backend:/server
     depends_on:
       db:
         condition: service_healthy
@@ -44,7 +40,7 @@ services:
       POSTGRES_DB: ${POSTGRES_DB}
       POSTGRES_USER: ${POSTGRES_USER}
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready - U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 10s
       timeout: 10s
       retries: 5
