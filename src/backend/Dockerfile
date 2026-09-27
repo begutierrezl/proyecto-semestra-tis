@@ -13,7 +13,7 @@ COPY requirement.txt .
 RUN uv pip install -r requirement.txt --system
 
 COPY . .
-RUN sed -i 's/\r$//' /entrypoint.sh && chmod +x /entrypoint.sh
+RUN sed -i 's/\r$//' ./entrypoint.sh && chmod +x ./entrypoint.sh
 
 EXPOSE 8000
 
