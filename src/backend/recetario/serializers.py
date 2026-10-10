@@ -1,5 +1,7 @@
+from django.apps import apps
 from django.contrib.auth.models import User
 from rest_framework import serializers
+
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,42 +11,35 @@ class UserSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
-        return user 
+        return user
+
 
 # ----------------------------------------------------------------------
 # Funcion 4: Ajuste de ingredientes segun cantidad de personas (R4)
+# El servidor solo entrega los datos de la receta (R4.4).
+# El calculo (R4.5) y la validacion de CANTIDAD_PERSONAS_DESEADA (R4.1, R4.2)
+# se realizan del lado del usuario (React).
+# Dependencia de funcion 1: modelos Receta e IngredienteReceta
 # ----------------------------------------------------------------------
 
-# Validacion de la entrada CANTIDAD_PERSONAS_DESEADA
-# R4.1: entero positivo, > 0 y no superior a 100
-# R4.2: campo estrictamente obligatorio
-class ParametrosAjusteSerializer(serializers.Serializer):
-    cantidad_personas_deseada = serializers.IntegerField(
-        min_value=1,
-        max_value=100,
-        error_messages={
-            "required": "CANTIDAD_PERSONAS_DESEADA es obligatoria",
-            "invalid": "CANTIDAD_PERSONAS_DESEADA debe ser un numero entero",
-            "min_value": "CANTIDAD_PERSONAS_DESEADA debe ser mayor a cero",
-            "max_value": "CANTIDAD_PERSONAS_DESEADA no puede ser superior a 100",
-        },
-    )
+# Ingrediente original: NOMBRE_INGREDIENTE, CANTIDAD_INGREDIENTE, UNIDAD_MEDIDA
+class IngredienteAjusteSerializer(serializers.Serializer):
+    nombre_ingrediente = serializers.CharField(read_only=True)
+    cantidad_ingrediente = serializers.FloatField(read_only=True)
+    unidad_medida = serializers.CharField(read_only=True)
 
 
-# Ingrediente ajustado: NOMBRE_INGREDIENTE, CANTIDAD_AJUSTADA, UNIDAD_MEDIDA (R4.6)
-class IngredienteAjustadoSerializer(serializers.Serializer):
-    nombre_ingrediente = serializers.CharField()
-    cantidad_ajustada = serializers.FloatField()
-    unidad_medida = serializers.CharField()
+# Datos de la receta recuperados en R4.4 (solo lectura)
+class RecetaAjusteSerializer(serializers.Serializer):
+    nombre_receta = serializers.CharField(read_only=True)
+    descripcion_corta = serializers.CharField(read_only=True)
+    categoria = serializers.CharField(read_only=True)
+    regimen_alimenticio = serializers.CharField(read_only=True)
+    instrucciones_preparacion = serializers.CharField(read_only=True)
+    cantidad_personas = serializers.IntegerField(read_only=True)  # valor original de la receta
+    ingredientes = serializers.SerializerMethodField()  # solo lectura por defecto
 
-
-# Salida 1 (R4.6): solo lectura, los datos vienen calculados desde generar_receta_ajustada
-class RecetaAjustadaSerializer(serializers.Serializer):
-    nombre_receta = serializers.CharField()
-    descripcion_corta = serializers.CharField()
-    categoria = serializers.CharField()
-    regimen_alimenticio = serializers.CharField()
-    cantidad_personas_deseada = serializers.IntegerField()
-    ingredientes_ajustados = IngredienteAjustadoSerializer(many=True)
-    instrucciones_preparacion = serializers.CharField()
-    mensaje = serializers.CharField()  # Salida 2: mensaje de R4.6 / R4.7
+    def get_ingredientes(self, receta):
+        IngredienteReceta = apps.get_model("recetario", "IngredienteReceta")
+        ingredientes = IngredienteReceta.objects.filter(id_receta=receta.pk)
+        return IngredienteAjusteSerializer(ingredientes, many=True).data
