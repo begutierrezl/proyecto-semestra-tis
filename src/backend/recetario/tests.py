@@ -153,20 +153,24 @@ class PromedioValoracionTestCase(TestCase):
         )
 
     def testValidarPromedioValoracion_UT_R32_08(self):
-        calificacion = CalificacionReceta(
-            receta=self.receta,
-            promedio_valoracion=3.55,
-            cantidad_valoraciones=0,
+        self.assertRaisesMessage(
+            CalificacionReceta(
+                receta=self.receta,
+                promedio_valoracion=3.55,
+                cantidad_valoraciones=0,
+            ),
+            "PROMEDIO_VALORACION invalido: debe ser flotante con 1 decimal"
         )
-        self.assertEqual(calificacion.promedio_valoracion, 3.5)
 
     def testValidarPromedioValoracion_UT_R32_09(self):
-        calificacion = CalificacionReceta(
-            receta=self.receta,
-            promedio_valoracion=0.95,
-            cantidad_valoraciones=0,
+        self.assertRaisesMessage(
+            CalificacionReceta(
+                receta=self.receta,
+                promedio_valoracion=0.95,
+                cantidad_valoraciones=0,
+            ),
+            "PROMEDIO_VALORACION invalido: debe ser flotante con 1 decimal"
         )
-        self.assertEqual(calificacion.promedio_valoracion, 1.0)
 
     def testValidarPromedioValoracion_UT_R32_10(self):
         self.assertRaisesMessage(CalificacionReceta(

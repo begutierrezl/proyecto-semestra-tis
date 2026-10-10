@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from recetario.views import CreateUserView
 from recetario.views import CreateRecetaView
-from recetario.views import CreateCalificacionView, RetrieveCalifiacionView, RetrieveUpdateCalificacionView
+from recetario.views import CreateCalificacionView, RetrieveUpdateCalificacionFromIdView, RetrieveUpdateCalifiacionFromRecetaView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -28,8 +28,8 @@ urlpatterns = [
     path("api/token/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
     path("api/insert/receta/", CreateRecetaView.as_view(), name="create_receta"),
-    path("api/get/calificacion/<int:id>/", RetrieveCalifiacionView.as_view(), name="get_calificacion"),
-    path("api/get/calificacion/<int:id_receta>/", RetrieveCalifiacionView.as_view(), name="get_calificacion_receta"),
-    path("api/insert/calificacion/", CreateCalificacionView.as_view(), name="get_calificaciones"),
-    path("api/update/calificacion/<int:id>/", RetrieveUpdateCalificacionView.as_view(), name="update_calificacion"),
+    path("api/calificacion/get/from_id/<int:id>/", RetrieveUpdateCalificacionFromIdView.as_view(), name="get_calificacion"),
+    path("api/calificacion/get/from_receta/<int:receta_id>/", RetrieveUpdateCalifiacionFromRecetaView.as_view(), name="get_calificacion_receta"),
+    path("api/calificacion/insert/", CreateCalificacionView.as_view(), name="inser_calificacion"),
+    path("api/calificacion/update/from_id/<int:id>/", RetrieveUpdateCalificacionFromIdView.as_view(), name="update_calificacion"),
 ]

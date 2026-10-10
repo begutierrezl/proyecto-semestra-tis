@@ -1,7 +1,5 @@
 from django.db import models
-from django.core.validators import MaxValueValidator, MinValueValidator
-from django.core.exceptions import ValidationError
-from django.utils.translation import gettext_lazy
+from django.core.validators import MaxValueValidator, MinValueValidator, DecimalValidator
 
 # Create your models here.
 
@@ -38,6 +36,7 @@ class CalificacionReceta(models.Model):
         validators=[
             MaxValueValidator(5),
             MinValueValidator(1),
+            DecimalValidator(max_digits=None, decimal_places=1),
         ], 
         db_comment="En escala de Likert, >=1 y <=5"
     )
@@ -53,4 +52,9 @@ class CalificacionReceta(models.Model):
 
     def __str__(self):
         return str(f"prom: {self.promedio_valoracion}, cant: {self.cantidad_valoraciones}")
+
+    def save(self, **kwargs):
+        if "promedio_valoracion" in kwargs:
+            print(kwargs["promedio_valoraciones"])
+        return super().save(**kwargs)
     
