@@ -24,11 +24,11 @@ class CalificacionReceta(models.Model):
     #   Advertencia: clase 'Receta' puede estar sujeto a cambio de nombre
     # Relacion OneToOneField cumple el requisito R3.9,
     # - "donde el ID_RECETA debe ser exactamente igual al ID_RECETA ingresado."
-    id_receta = models.OneToOneField(
+    receta = models.OneToOneField(
         Receta,
         on_delete=models.CASCADE,
         primary_key=False,
-        related_name="id_receta"
+        related_name="receta"
     )
 
     # Campo PROMEDIO_VALORACION especificado en R3.2

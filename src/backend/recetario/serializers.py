@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import CalificacionReceta
+from .models import Receta, CalificacionReceta
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,14 +12,30 @@ class UserSerializer(serializers.ModelSerializer):
         user = User.objects.create_user(**validated_data)
         return user
 
-# pendiente investigar e implementar
-class CalificacionRecetaSerializer(serializers.ModelSerializer):
+# testear serializador de recetas
+class RecetaSerializer(serializers.ModelSerializer):
     class Meta:
-        model = CalificacionReceta
-        fields = "__all__"
-        read_only_fields = ["id", "id_receta"]
+        model = Receta
+        fields = ["id", "nombre"]
 
     def create(self, validated_data):
+        receta = Receta.objects.create(**validated_data)
+        return receta
+
+    
+
+# pendiente investigar e implementar
+class CalificacionRecetaSerializer(serializers.ModelSerializer):
+    #id_receta = serializers.IntegerField()
+
+    class Meta:
+        model = CalificacionReceta
+        fields = ["receta", "promedio_valoracion", "cantidad_valoraciones"]
+        read_only_fields = ["id",]
+
+    def create(self, validated_data):
+        #receta = Receta.objects.get(validated_data.get("id_receta"))
+        
         calificacion_receta = CalificacionReceta.objects.create(**validated_data)
         # especificar codigo de creacion y validacion
         return calificacion_receta

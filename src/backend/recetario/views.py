@@ -1,8 +1,8 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .models import CalificacionReceta
-from .serializers import UserSerializer, CalificacionRecetaSerializer
+from .models import Receta, CalificacionReceta
+from .serializers import UserSerializer, RecetaSerializer, CalificacionRecetaSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
 # Create your views here.
@@ -10,6 +10,12 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+    permission_classes = [AllowAny]
+
+# Dependencia de pruebas funcion 3, funcion 1 ingresa receta
+class CreateRecetaView(generics.CreateAPIView):
+    queryset = Receta.objects.all()
+    serializer_class = RecetaSerializer
     permission_classes = [AllowAny]
 
 # Dependencia de funcion 1 ingresar receta -> Definicion de modelo Receta

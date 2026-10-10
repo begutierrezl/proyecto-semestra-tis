@@ -17,6 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from recetario.views import CreateUserView
+from recetario.views import CreateRecetaView
 from recetario.views import CreateCalificacionView, RetrieveCalifiacionView, RetrieveUpdateCalificacionView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
@@ -26,8 +27,9 @@ urlpatterns = [
     path("api/token/", TokenObtainPairView.as_view(), name="get_token"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
-    path("api/get/calificacion/", CreateCalificacionView.as_view(), name="get_calificaciones"),
+    path("api/insert/receta/", CreateRecetaView.as_view(), name="create_receta"),
     path("api/get/calificacion/<int:id>/", RetrieveCalifiacionView.as_view(), name="get_calificacion"),
     path("api/get/calificacion/<int:id_receta>/", RetrieveCalifiacionView.as_view(), name="get_calificacion_receta"),
+    path("api/insert/calificacion/", CreateCalificacionView.as_view(), name="get_calificaciones"),
     path("api/update/calificacion/<int:id>/", RetrieveUpdateCalificacionView.as_view(), name="update_calificacion"),
 ]

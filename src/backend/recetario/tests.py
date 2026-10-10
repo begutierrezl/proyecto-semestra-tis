@@ -12,7 +12,7 @@ class IdCalificacionTestCase(TestCase):
     def testValidarIdCalificacion_UT_R31_01(self):
         calificacion = CalificacionReceta(
             id=1,
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=1.0,
             cantidad_valoraciones=0
         )
@@ -21,7 +21,7 @@ class IdCalificacionTestCase(TestCase):
     def testValidarIdCalificacion_UT_R31_02(self):
         calificacion = CalificacionReceta(
             id=4587,
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=1.0,
             cantidad_valoraciones=0
         )
@@ -30,7 +30,7 @@ class IdCalificacionTestCase(TestCase):
     def testValidarIdCalificacion_UT_R31_03(self):
         calificacion = CalificacionReceta(
             id=999999999999,
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=1.0,
             cantidad_valoraciones=0
         )
@@ -40,7 +40,7 @@ class IdCalificacionTestCase(TestCase):
         self.assertRaisesMessage(
             CalificacionReceta(
             id=0,
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=1.0,
             cantidad_valoraciones=0
             ),
@@ -51,7 +51,7 @@ class IdCalificacionTestCase(TestCase):
         self.assertRaisesMessage(
             CalificacionReceta(
             id=-5,
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=1.0,
             cantidad_valoraciones=0
             ),
@@ -61,7 +61,7 @@ class IdCalificacionTestCase(TestCase):
     def testValidarIdCalificacion_UT_R31_06(self):
         self.assertRaisesMessage(CalificacionReceta(
             id=1000000000000,
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=1.0,
             cantidad_valoraciones=0
             ),
@@ -71,7 +71,7 @@ class IdCalificacionTestCase(TestCase):
     def testValidarIdCalificacion_UT_R31_07(self):
         self.assertRaisesMessage(CalificacionReceta(
             id=3.5,
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=1.0,
             cantidad_valoraciones=0
             ),
@@ -81,7 +81,7 @@ class IdCalificacionTestCase(TestCase):
     def testValidarIdCalificacion_UT_R31_08(self):
         self.assertRaisesMessage(CalificacionReceta(
             id="abc",
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=1.0,
             cantidad_valoraciones=0
             ),
@@ -96,7 +96,7 @@ class PromedioValoracionTestCase(TestCase):
 
     def testValidarPromedioValoracion_UT_R32_01(self):
         calificacion = CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=1.1,
             cantidad_valoraciones=0,
         )
@@ -104,7 +104,7 @@ class PromedioValoracionTestCase(TestCase):
 
     def testValidarPromedioValoracion_UT_R32_02(self):
         calificacion = CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=4.9,
             cantidad_valoraciones=0,
         )
@@ -112,7 +112,7 @@ class PromedioValoracionTestCase(TestCase):
 
     def testValidarPromedioValoracion_UT_R32_03(self):
         calificacion = CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=3.5,
             cantidad_valoraciones=0,
         )
@@ -120,7 +120,7 @@ class PromedioValoracionTestCase(TestCase):
 
     def testValidarPromedioValoracion_UT_R32_04(self):
         calificacion = CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=4,
             cantidad_valoraciones=0,
         )
@@ -128,7 +128,7 @@ class PromedioValoracionTestCase(TestCase):
 
     def testValidarPromedioValoracion_UT_R32_05(self):
         calificacion = CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=1.0,
             cantidad_valoraciones=0,
         )
@@ -136,7 +136,7 @@ class PromedioValoracionTestCase(TestCase):
 
     def testValidarPromedioValoracion_UT_R32_06(self):
         self.assertRaisesMessage(CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=0,
             cantidad_valoraciones=0,
             ),
@@ -145,7 +145,7 @@ class PromedioValoracionTestCase(TestCase):
 
     def testValidarPromedioValoracion_UT_R32_07(self):
         self.assertRaisesMessage(CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=-1.2,
             cantidad_valoraciones=0,
             ),
@@ -154,7 +154,7 @@ class PromedioValoracionTestCase(TestCase):
 
     def testValidarPromedioValoracion_UT_R32_08(self):
         calificacion = CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=3.55,
             cantidad_valoraciones=0,
         )
@@ -162,7 +162,7 @@ class PromedioValoracionTestCase(TestCase):
 
     def testValidarPromedioValoracion_UT_R32_09(self):
         calificacion = CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=0.95,
             cantidad_valoraciones=0,
         )
@@ -170,7 +170,7 @@ class PromedioValoracionTestCase(TestCase):
 
     def testValidarPromedioValoracion_UT_R32_10(self):
         self.assertRaisesMessage(CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion="abc",
             cantidad_valoraciones=0,
             ),
@@ -179,7 +179,7 @@ class PromedioValoracionTestCase(TestCase):
 
     def testValidarPromedioValoracion_UT_R32_11(self):
         self.assertRaisesMessage(CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             cantidad_valoraciones=0,
             ),
             "PROMEDIO_VALORACION faltante: campo obligatorio"
@@ -187,7 +187,7 @@ class PromedioValoracionTestCase(TestCase):
 
     def testValidarPromedioValoracion_UT_R32_12(self):
         self.assertRaisesMessage(CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=5.1,
             cantidad_valoraciones=0,
             ),
@@ -202,7 +202,7 @@ class CantidadValoracionesTestCase(TestCase):
 
     def testValidarCantidadValoraciones_UT_R33_01(self):
         calificacion = CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=1,
             cantidad_valoraciones=0,
         )
@@ -210,7 +210,7 @@ class CantidadValoracionesTestCase(TestCase):
 
     def testValidarCantidadValoraciones_UT_R33_02(self):
         calificacion = CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=1,
             cantidad_valoraciones=1,
         )
@@ -219,7 +219,7 @@ class CantidadValoracionesTestCase(TestCase):
 
     def testValidarCantidadValoraciones_UT_R33_03(self):
         calificacion = CalificacionReceta(
-            id_receta=self.receta,
+            receta=self.receta,
             promedio_valoracion=1,
             cantidad_valoraciones=250,
         )
@@ -227,7 +227,7 @@ class CantidadValoracionesTestCase(TestCase):
 
     def testValidarCantidadValoraciones_UT_R33_04(self):
         self.assertRaisesMessage(CalificacionReceta(
-                id_receta=self.receta,
+                receta=self.receta,
                 promedio_valoracion=1,
                 cantidad_valoraciones=-1,
             ),
@@ -236,7 +236,7 @@ class CantidadValoracionesTestCase(TestCase):
 
     def testValidarCantidadValoraciones_UT_R33_05(self):
         self.assertRaisesMessage(CalificacionReceta(
-                id_receta=self.receta,
+                receta=self.receta,
                 promedio_valoracion=1,
                 cantidad_valoraciones=2.5,
             ),
@@ -245,7 +245,7 @@ class CantidadValoracionesTestCase(TestCase):
 
     def testValidarCantidadValoraciones_UT_R33_06(self):
         self.assertRaisesMessage(CalificacionReceta(
-                id_receta=self.receta,
+                receta=self.receta,
                 promedio_valoracion=1,
                 cantidad_valoraciones="abc",
             ),
@@ -254,7 +254,7 @@ class CantidadValoracionesTestCase(TestCase):
 
     def testValidarCantidadValoraciones_UT_R33_07(self):
         self.assertRaisesMessage(CalificacionReceta(
-                id_receta=self.receta,
+                receta=self.receta,
                 promedio_valoracion=1,
             ),
             "CANTIDAD_VALORACIONES faltante: Campo Obligatorio"
