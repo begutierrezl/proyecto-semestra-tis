@@ -1,123 +1,92 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import api from "../api";
-import Note from "../components/Note"
+
+function Calificacion(id_receta, cantidad_valoraciones, promedio_valoracion ) {
+    this.idReceta = id_receta;
+    this.cantidadValoraciones = cantidad_valoraciones;
+    this.promedioValoracion = promedio_valoracion;
+}
 
 function ListadoRecetasPopulares() {
-    // Lista de recetas + estados
-    const [recetas, setRecetas] = useState([]);
-    // lista de valoraciones de una receta en particular
-    const [valoraciones, setValoraciones] = useState([]);
+
+    const calificaciones = useRef([]);
     // Calificacion de una receta, por receta en 'recetas'
-    const [calificaciones, setCalificaciones] = useState([]);
-
-    // recupera las recetas de la BD y los pone en la lista recetas
-    const getRecetas = () => {
-        api
-            .get("/api/receta/")
-            .then((res) => res.data)
-            .then((data) => {
-                setRecetas(data);
-                console.log(data);
-            })
-            .catch((err) => alert(err));
-    };
-
-    const getValoraciones = (id_receta) => {
-        api
-            .get(`api/valoracion/${id_receta}`)
-            .then((res) => res.data)
-            .then((data) => {
-                setValoraciones(data);
-                console.log(data);
-            })
-            .catch((err) => alert(err));
-    };
-
-    const contarValoraciones = (lista_valoraciones) => {
-        let cantidad_valoraciones = 0;
-        lista_valoraciones.map(() => {
-            cantidad_valoraciones += 1;
-        })
-        return cantidad_valoraciones
+    const listado_recetas_populares = useRef([]);
+ 
+    // captura la promesa de informacion y obtiene la cantidad de valoraciones
+    const contarValoraciones = (valoraciones) => {
+        return valoraciones.length;
     }
 
-    const promedioValoracion = (lista_valoraciones, cantidad_valoraciones) => {
+    // captura la promesa de informacion y obtiene el promedio de valoraciones
+    const promedioValoracion = (valoraciones, cantidad_valoraciones) => {
         let suma = 0;
-        lista_valoraciones.map((valoracion) => {
+        for (let index = 0; index < valoraciones.length; index++) {
+            const valoracion = valoraciones[index];
             suma += valoracion.valoracion;
-        })
-        return suma/cantidad_valoraciones;
+        }
+        return suma/cantidad_valoraciones; 
+    } 
+
+    const getRecetas = () => {
+        // crea un promise para el axios request get
+        const promise = api.get("/api/receta/");
+        // usando .then, crea un nuevo promise que extrae los datos
+        const dataPromise = promise.then((response) => response.data);
+        // retorna los datos
+        return dataPromise;
     }
 
-    // obtiene las recetas
-    useEffect(() => {
-        getRecetas();
-        recetas.map(
-            (receta) => {
-                let cantidad_valoraciones = 0;
-                let promedio_valoracion = 0;
-                
-                getValoraciones(receta.id);
-                cantidad_valoraciones = contarValoraciones(valoraciones);
-                promedio_valoracion = promedioValoracion(valoraciones);
+    const getValoracionesDeReceta = (id_receta) => {
+        const promise = api.get(`/api/valoracion/${id_receta}/`)
+        const dataPromise = promise.then((response) => response.data);
+        return dataPromise;
+    };
 
-                console.log(cantidad_valoraciones)
-                console.log(promedio_valoracion)
+    const updateCalificaciones = () => {
+        // queda comprobar si las calificaciones existen antes de calcular
+
+        getRecetas().then(data => {
+            // recupera valoraciones de cada receta recuperada
+            for (let index = 0; index < data.length; index++) {
+                const receta = data[index];
+                // recupera las valoraciones de una receta X
+                getValoracionesDeReceta(receta.id)
+                .then(data => {
+                    let cantidad_valoraciones = contarValoraciones(data);
+                    let promedio_valoracion = (cantidad_valoraciones != 0) ? promedioValoracion(data) :  0;
+                    const calificacion = new Calificacion(receta.id, cantidad_valoraciones, promedio_valoracion)
+                    calificaciones.current.push(calificacion);
+                });   
             }
-        );
+        });
+
+        // guardar las calificaciones que tienen valores nuevos
+    }
+
+    const ordenarRecetasCalificadas = () => {
+        return []
+    };
+
+    const getListadoRecetasPopulares = () => {
+        
+    };
+
+    // Se ejectua al cargar la pagina
+    useEffect(() => {
+        
+        console.log(calificaciones);
     }, [])
 
     return (
         <div>
-            <h1>Hola mundo</h1>
+            <div>
+                <h1>Lista de recetas populares</h1>
+                
+            </div>
+            
         </div>
     );
 }
 
 export default ListadoRecetasPopulares;
-
-/* 
-    ejemplo:
-
-    const [notes, setNotes] = useState([]);
-    const [content, setContent] = useState("");
-    const [title, setTitle] = useState("");
-
-    // Se ejecuta solo una vez al cargar el modulo
-    useEffect(() => {
-        getNotes();
-    }, []);
-
-    const getNotes = () => {
-        api
-            .get("/api/notes/")
-            .then((res) => res.data)
-            .then((data) => {
-                setNotes(data);
-                console.log(data);
-            })
-            .catch((err) => alert(err));
-    };
-
-    const deleteNote = (id) => {
-        api
-            .delete(`/api/notes/delete/${id}/`)
-            .then((res) => {
-                if (res.status === 204) alert("Note deleted!");
-                else alert("Failed to delete note.");
-                getNotes();
-            })
-            .catch((error) => alert(error));
-    };
-
-    const createNote = (e) => {
-        e.preventDefault();
-        api
-            .post("/api/notes/", { content, title })
-            .then((res) => {
-                if (res.status === 201) alert("Note created!");
-                else alert("Failed to make note.");
-                getNotes();
-            })
-            .catch((err) => alert(err));
-    }; */

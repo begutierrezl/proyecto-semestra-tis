@@ -29,7 +29,8 @@ class ValoracionSerializer(serializers.ModelSerializer):
         fields = ["id", "usuario", "receta", "valoracion"]
 
     def create(self, validated_data):
-        return Valoracion.objects.create(**validated_data)
+        valoracion = Valoracion.objects.create(**validated_data)
+        return valoracion
 
 class CalificacionRecetaCreateSerializer(serializers.ModelSerializer):
     class Meta:
