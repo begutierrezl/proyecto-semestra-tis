@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from rest_framework import generics
-from .models import Receta, CalificacionReceta
+from .models import Receta, Valoracion, CalificacionReceta
 from .serializers import UserSerializer, RecetaSerializer
+from .serializers import ValoracionSerializer
 from .serializers import CalificacionRecetaCreateSerializer, CalificacionRecetaUpdateSerializer
 from rest_framework.permissions import IsAuthenticated, AllowAny
 
@@ -21,7 +22,17 @@ class CreateRecetaView(generics.CreateAPIView):
 
 # Dependencia de funcion 1 ingresar receta -> Definicion de modelo Receta
 class RecetasListView(generics.ListAPIView):
-    pass
+    queryset = Receta.objects.all()
+    serializer_class = RecetaSerializer
+    permission_classes = [AllowAny]
+
+# Dependencia de funcion 2 valoracion recetas -> Definicion de modelo Valoracion
+class RetrieveValoracionView(generics.ListAPIView):
+    queryset = Valoracion.objects.all()
+    serializer_class = ValoracionSerializer
+    permission_classes = [AllowAny]
+    lookup_field = "receta_id"
+
 
 # referencias 
 # https://www.django-rest-framework.org/api-guide/generic-views/#concrete-view-classes

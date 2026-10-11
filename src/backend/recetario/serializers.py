@@ -1,6 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
-from .models import Receta, CalificacionReceta
+from .models import Receta, Valoracion, CalificacionReceta
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -21,6 +21,15 @@ class RecetaSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         receta = Receta.objects.create(**validated_data)
         return receta
+
+# Depedencia de funcion 2: Valoracion de recetas
+class ValoracionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Valoracion
+        fields = ["id", "usuario", "receta", "valoracion"]
+
+    def create(self, validated_data):
+        return Valoracion.objects.create(**validated_data)
 
 class CalificacionRecetaCreateSerializer(serializers.ModelSerializer):
     class Meta:

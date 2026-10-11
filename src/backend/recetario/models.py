@@ -1,11 +1,27 @@
 from django.db import models
 from django.core.validators import MaxValueValidator, MinValueValidator, DecimalValidator
+from django.contrib.auth.models import User
 
 # Create your models here.
 
 # dependencias
 class Receta(models.Model):
     nombre = models.CharField(max_length=50, db_default="")
+
+class Valoracion(models.Model):
+    usuario = models.ForeignKey(
+        User,
+        on_delete=models.CASCADE,
+        primary_key=False,
+        related_name="usuario"
+    )
+    receta = models.ForeignKey(
+        Receta,
+        on_delete=models.CASCADE,
+        primary_key=False,
+        related_name="valoracion_receta"
+    )
+    valoracion = models.FloatField(db_default=1)
 
 # referencias:
 # https://docs.djangoproject.com/en/6.1/ref/models/instances/
