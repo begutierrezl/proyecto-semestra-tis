@@ -1,6 +1,5 @@
 from django.db import models, transaction
 from django.core.validators import MinLengthValidator, RegexValidator, FileExtensionValidator, MaxLengthValidator,MinValueValidator,MaxValueValidator
-from decimal import Decimal
 from django.core.exceptions import ValidationError
 
 # Create your models here.
@@ -17,11 +16,30 @@ def validar_tamano_imagen(archivo):
 
 class Receta(models.Model):
 
+    REGIMENES_ALIMENTICIOS = { 
+        "VACIO":"",
+        "NORMAL": "Normal",
+        "DIABETICO": "Diabetico",
+        "CELIACO": "Celiaco",
+        "VEGETARIANO": "Vegetariano",
+        "VEGANO": "Vegano",
+        "SIN_LACTOSA": "Sin lactosa"
+        }
+    CATEGORIAS={
+        "VACIO":"",
+        "POSTRES": "Postres",
+        "ENSALADAS": "Ensaladas", 
+        "PLATO_FONDO": "Plato de fondo",
+        "SOPAS": "Sopas",
+        "ENTRADAS": "Entradas",
+        "BEBIDAS": "Bebidas",
+        "DESAYUNOS": "Desayunos"
+        }
     # R1.1 y R1.17.1: asignado por la base de datos
-    ID_RECETA = models.BigAutoField(primary_key=True)
+    id = models.BigAutoField(primary_key=True)
 
     # R1.2, R1.14, R1.15
-    NOMBRE_RECETA = models.CharField(
+    nombre_receta = models.CharField(
         max_length=100,
         unique=True,
         validators=[
@@ -37,7 +55,7 @@ class Receta(models.Model):
     )
 
     # R1.3
-    DESCRIPCION_CORTA = models.CharField(
+    descripcion_corta = models.CharField(
         max_length=300,
         validators=[
             MinLengthValidator(10),
@@ -47,40 +65,25 @@ class Receta(models.Model):
         ],
     )
 
-    # R1.7: no nulo
-    IMAGEN_REFERENCIAL = models.ImageField(
+    # R1.7: revisar docker
+    """imagen_referencial = models.ImageField(
         upload_to="recetas/",
         validators=[FileExtensionValidator(["jpg", "png"]),
                     validar_tamano_imagen],
-    )
+    )""" 
 
     # R1.8
-    CANTIDAD_PERSONAS = models.PositiveIntegerField(
-        validators=[MinValueValidator(1), MaxValueValidator(100)],
+    cantidad_personas = models.PositiveIntegerField(
+        db_default=1,validators=[MinValueValidator(1), MaxValueValidator(100)],
     )
 
-    class Categoria(models.TextChoices):          # R1.9 
-        POSTRES = "postres", "Postres"
-        ENSALADAS = "ensaladas", "Ensaladas"
-        PLATO_DE_FONDO = "plato de fondo", "Plato de fondo"
-        SOPAS = "sopas", "Sopas"
-        ENTRADAS = "entradas", "Entradas"
-        BEBIDAS = "bebidas", "Bebidas"
-        DESAYUNOS = "desayunos", "Desayunos"
 
-    CATEGORIA = models.CharField(max_length=20, choices=Categoria.choices)
+    categoria = models.CharField(max_length=20, choices=CATEGORIAS, db_default="VACIO")
 
-    class Regimen(models.TextChoices):            # R1.10 
-        NORMAL = "normal", "Normal"
-        DIABETICO = "diabetico", "Diabético"
-        CELIACO = "celíaco", "Celíaco"
-        VEGETARIANO = "vegetariano", "Vegetariano"
-        VEGANO = "vegano", "Vegano"
-        SIN_LACTOSA = "sin lactosa", "Sin lactosa"
-    REGIMEN_ALIMENTICIO = models.CharField(max_length=20, choices=Regimen.choices)
+    regimen_alimenticio = models.CharField(max_length=20, choices=REGIMENES_ALIMENTICIOS, db_default="VACIO")
 
     # R1.11
-    INSTRUCCIONES_PREPARACION = models.TextField(
+    instrucciones_preparacion = models.TextField(
         validators=[
             MinLengthValidator(20),
             MaxLengthValidator(5000),
@@ -90,34 +93,27 @@ class Receta(models.Model):
     )
 
     # R1.12 y R1.17.2: generado por el sistema, no ingresado
-    ENLACE_RECETA = models.URLField(
+    enlace_receta = models.URLField(
         max_length=200, blank=True, editable=False,
         validators=[RegexValidator(
-            r"^https://www\.libroderecetas\.com/receta/\d+$",
+            #r"^https://www\.libroderecetas\.com/receta/\d+$", #Para uso en produccion
+            r"^https://127.0.0.1:8000/receta/\d+$", # Para uso en desarrollo
             "ENLACE_RECETA no es un enlace valido")],
     )
 
 
     #para printear nombre receta
     def __str__(self):
-        return self.NOMBRE_RECETA
+        return self.nombre_receta
 
-    def save(self, *args, **kwargs):
-        # metodo save de clase models, se llama de la misma manera y se le añade la generacion del enlace despues de insertar el id
-        with transaction.atomic():
-            super().save(*args, **kwargs)
-            enlace = f"https://www.libroderecetas.com/receta/{self.ID_RECETA}"
-            if self.ENLACE_RECETA != enlace:
-                self.ENLACE_RECETA = enlace
-                super().save(update_fields=["ENLACE_RECETA"])
 
 
 class Ingrediente(models.Model):
-    RECETA = models.ForeignKey(
+    receta = models.ForeignKey(
         Receta, on_delete=models.CASCADE, related_name="ingredientes")
 
     # R1.4
-    NOMBRE_INGREDIENTE = models.CharField(
+    nombre_ingrediente = models.CharField(
         max_length=80,
         validators=[
             MinLengthValidator(3, "NOMBRE_INGREDIENTE no es un ingreso válido, debe tener minimo 3 caracteres"),
@@ -127,24 +123,26 @@ class Ingrediente(models.Model):
     )
 
     # R1.5: blank=True porque con "al gusto" se completa sola (R1.14)
-    CANTIDAD_INGREDIENTE = models.DecimalField(
-        max_digits=10, decimal_places=2, blank=True, null=True,
-        validators=[MinValueValidator(Decimal("0.01"))],
+    cantidad_ingrediente = models.DecimalField(
+        max_digits=10, decimal_places=2, 
+        validators=[MinValueValidator(0.01)],
     )
-    class Unidad(models.TextChoices):             # R1.6
-        GRAMOS = "gramos (g)", "gramos (g)"
-        KILOGRAMOS = "kilogramos (kg)", "kilogramos (kg)"
-        MILILITROS = "mililitros (ml)", "mililitros (ml)"
-        LITROS = "litros (l)", "litros (l)"
-        TAZAS = "tazas", "tazas"
-        CUCHARADAS = "cucharadas", "cucharadas"
-        CUCHARADITAS = "cucharaditas", "cucharaditas"
-        UNIDADES = "unidades", "unidades"
-        AL_GUSTO = "al gusto", "al gusto"
+    UNIDADES = {
+        "VACIO":"",
+        "GRAMOS": "gramos (g)",
+        "KILOGRAMOS": "kilogramos (kg)",
+        "MILILITROS": "mililitros (ml)",
+        "LITROS": "litros (l)",
+        "TAZAS": "tazas",
+        "CUCHARADAS": "cucharadas",
+        "CUCHARADITAS": "cucharaditas",
+        "UNIDADES": "unidades",
+        "AL_GUSTO": "al gusto"
+        }
 
 
-    UNIDAD_MEDIDA = models.CharField(max_length=20, choices=Unidad.choices)
+    unidad_medida = models.CharField(max_length=20, choices=UNIDADES)
 
 
     def __str__(self):
-        return f"{self.NOMBRE_INGREDIENTE} ({self.CANTIDAD_INGREDIENTE} {self.UNIDAD_MEDIDA})"
+        return f"{self.nombre_ingrediente} ({self.cantidad_ingrediente} {self.unidad_medida})"
