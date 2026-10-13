@@ -60,7 +60,7 @@ class Receta(models.Model):
         validators=[
             MinLengthValidator(10),
             #Regex: valores de 1.3 que entran en "se aceptarán caracteres alfabéticos, numéricos,  espacios y signos de puntuación básicos(punto, coma, punto y coma)"
-            RegexValidator(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .,;]+$",
+            RegexValidator(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .,;:]+$",
                            "DESCRIPCION_CORTA no es un ingreso válido, incluye caracteres no permitidos"),
         ],
     )
@@ -94,10 +94,10 @@ class Receta(models.Model):
 
     # R1.12 y R1.17.2: generado por el sistema, no ingresado
     enlace_receta = models.URLField(
-        max_length=200, blank=True, editable=False,
+        max_length=200, blank=True, 
         validators=[RegexValidator(
             #r"^https://www\.libroderecetas\.com/receta/\d+$", #Para uso en produccion
-            r"^https://127.0.0.1:8000/receta/\d+$", # Para uso en desarrollo
+            r"^http://127.0.0.1:8000/receta/\d+$", # Para uso en desarrollo
             "ENLACE_RECETA no es un enlace valido")],
     )
 
@@ -110,14 +110,14 @@ class Receta(models.Model):
 
 class Ingrediente(models.Model):
     receta = models.ForeignKey(
-        Receta, on_delete=models.CASCADE, related_name="ingredientes")
+        Receta, on_delete=models.CASCADE, related_name="ingrediente_receta")
 
     # R1.4
     nombre_ingrediente = models.CharField(
         max_length=80,
         validators=[
             MinLengthValidator(3, "NOMBRE_INGREDIENTE no es un ingreso válido, debe tener minimo 3 caracteres"),
-            RegexValidator(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ ]+$",
+            RegexValidator(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ 0-9.,;:]+$",
                            "NOMBRE_INGREDIENTE no es un ingreso válido, incluye caracteres no permitidos"),
         ],
     )

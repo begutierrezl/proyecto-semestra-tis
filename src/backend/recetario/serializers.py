@@ -14,37 +14,63 @@ class UserSerializer(serializers.ModelSerializer):
 
 
 class IngredienteSerializer(serializers.ModelSerializer):
-    # Lo dejamos opcional para que DRF no reclame si viene vacío cuando es "al gusto"
    
     class Meta:
         model = Ingrediente
-        fields = ["NOMBRE_INGREDIENTE", "CANTIDAD_INGREDIENTE", "UNIDAD_MEDIDA"]
+        fields = ["nombre_ingrediente",
+                  "cantidad_ingrediente",
+                   "unidad_medida"]
 
     def create(self, validated_data):
         ingrediente = Ingrediente.objects.create_user(**validated_data)
         return ingrediente
 
 
-class RecetaSerializer(serializers.ModelSerializer):
+#serializador para crear las recetas
+class CreateRecetaSerializer(serializers.ModelSerializer):
     #para incluir los ingredientes
-    ingredientes = IngredienteSerializer(many=True)
+    ingrediente_receta = IngredienteSerializer(many=True)
     class Meta:
         model = Receta
         fields = [
-            "ID_RECETA",
-            "NOMBRE_RECETA",
-            "DESCRIPCION_CORTA",
-            "CANTIDAD_PERSONAS",
-            "CATEGORIA",
-            "REGIMEN_ALIMENTICIO",
-            "INSTRUCCIONES_PREPARACION",
-            "ENLACE_RECETA",
-            "INGREDIENTES",
+            "id",
+            "nombre_receta",
+            "descripcion_corta",
+            "cantidad_personas",
+            "categoria",
+            "regimen_alimenticio",
+            "instrucciones_preparacion",
+            "enlace_receta",
+            "ingrediente_receta",
         ]
-        read_only_fields = ["ID_RECETA", "ENLACE_RECETA"] #campos que serviran para respuesta no entrada 
+        read_only_fields = ["id", "enlace_receta"] #campos que serviran para respuesta no entrada 
     def create(self, validated_data):
-        receta = Receta.objects.create_user(**validated_data)
+        #datos ingredientes
+        ingrediente_receta_data = validated_data.pop('ingrediente_receta')
+        receta= Receta.objects.create(**validated_data)
+        for ingred_data in ingrediente_receta_data:
+             Ingrediente.objects.create(receta=receta, **ingred_data)
+        #con el objeto receta creado y su id asignado, se crea el enlace y se guarda
+        #enlace_creado="https://www.libroderecetas.com/receta/"+ str(receta.id) #Para produccion
+        enlace_creado="http://127.0.0.1:8000/receta/"+ str(receta.id) #Para desarrollo
+        receta.enlace_receta=enlace_creado
+        receta.save(update_fields=["enlace_receta"])
         return receta
 
-
-
+#serializador para recuperar recetas
+class ReadRecetaSerializer(serializers.ModelSerializer):
+    ingrediente_receta = IngredienteSerializer(many=True, read_only=True)
+    class Meta:
+        model = Receta
+        fields = [
+            "id",
+            "nombre_receta",
+            "descripcion_corta",
+            "cantidad_personas",
+            "categoria",
+            "regimen_alimenticio",
+            "instrucciones_preparacion",
+            "enlace_receta",
+            "ingrediente_receta",
+        ]
+        read_only_fields = ["id", "enlace_receta"] #campos que serviran para respuesta no entrada 
