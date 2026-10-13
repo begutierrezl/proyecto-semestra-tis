@@ -18,7 +18,7 @@ from .serializers import CreateRecetaSerializer, ReadRecetaSerializer
 #from .serializers import RecetaSerializer conflicto por resolver con Receta
 from .serializers import ValoracionSerializer
 from .serializers import CalificacionRecetaCreateSerializer, CalificacionRecetaUpdateSerializer
-from .serializers import ParametrosAjusteSerializer, RecetaAjustadaSerializer,
+from .serializers import ParametrosAjusteSerializer, RecetaAjustadaSerializer
 
 # Create your views here.
 
@@ -27,6 +27,7 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
+#Ingreso receta Funcion R1: Ingreso de Recetas
 #ingreso de receta
 class CreateRecetaView(generics.CreateAPIView):
     queryset= Receta.objects.all()
@@ -40,7 +41,7 @@ class ListRecetasView(generics.ListAPIView):
     permission_classes = [AllowAny]
     
 #recupera una receta especifica por id
-class ListRecetaidView(generics.RetrieveAPIView):
+class RetrieveRecetaIdView(generics.RetrieveAPIView):
     queryset = Receta.objects.all()
     serializer_class = ReadRecetaSerializer
     permission_classes = [AllowAny]

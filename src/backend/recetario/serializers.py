@@ -61,7 +61,7 @@ class CreateRecetaSerializer(serializers.ModelSerializer):
              Ingrediente.objects.create(receta=receta, **ingred_data)
         #con el objeto receta creado y su id asignado, se crea el enlace y se guarda
         #enlace_creado="https://www.libroderecetas.com/receta/"+ str(receta.id) #Para produccion
-        enlace_creado="http://127.0.0.1:8000/receta/"+ str(receta.id) #Para desarrollo
+        enlace_creado="http://127.0.0.1:9000/receta/"+ str(receta.id) #Para desarrollo
         receta.enlace_receta=enlace_creado
         receta.save(update_fields=["enlace_receta"])
         return receta
