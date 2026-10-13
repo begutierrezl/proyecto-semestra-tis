@@ -33,6 +33,6 @@ urlpatterns = [
     path("api/valoracion/<int:receta_id>/", RetrieveValoracionView.as_view(), name="get_valoracion"),
     path("api/calificacion/get/from_id/<int:id>/", RetrieveUpdateCalificacionFromIdView.as_view(), name="get_calificacion"),
     path("api/calificacion/get/from_receta/<int:receta_id>/", RetrieveUpdateCalifiacionFromRecetaView.as_view(), name="get_calificacion_receta"),
-    path("api/calificacion/insert/", CreateCalificacionView.as_view(), name="inser_calificacion"),
-    path("api/calificacion/update/from_id/<int:id>/", RetrieveUpdateCalificacionFromIdView.as_view(), name="update_calificacion"),
+    path("api/calificacion/insert/", CreateCalificacionView.as_view(), name="insert_calificacion"),
+    path("api/calificacion/update/from_receta/<int:receta_id>/", RetrieveUpdateCalifiacionFromRecetaView.as_view(), name="update_calificacion"),
 ]

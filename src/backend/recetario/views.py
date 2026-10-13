@@ -27,11 +27,23 @@ class RecetasListView(generics.ListAPIView):
     permission_classes = [AllowAny]
 
 # Dependencia de funcion 2 valoracion recetas -> Definicion de modelo Valoracion
+def get_id_from_path(path: str) -> int:
+    path_splited = path.split("/")
+    for string in path_splited: 
+        if string.isdecimal(): return str(string)
+    return -1
+
 class RetrieveValoracionView(generics.ListAPIView):
-    queryset = Valoracion.objects.all()
     serializer_class = ValoracionSerializer
     permission_classes = [AllowAny]
     lookup_field = "receta_id"
+
+    def get_queryset(self):
+        id_receta: int = get_id_from_path(self.request.path)
+        if (id_receta == -1):
+            raise Exception("No se especifico un ID en el path")
+        receta = Receta.objects.get(id=id_receta)
+        return Valoracion.objects.filter(receta=receta)
 
 
 # referencias 
