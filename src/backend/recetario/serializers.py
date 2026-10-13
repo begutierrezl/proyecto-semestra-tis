@@ -1,7 +1,12 @@
 from django.contrib.auth.models import User
 from django.db import transaction
 from rest_framework import serializers
-from .models import Receta, Ingrediente
+from .models import (
+  Receta, 
+  Ingrediente, 
+  Valoracion, 
+  CalificacionReceta,
+)
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -12,8 +17,10 @@ class UserSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
-
-
+# ----------------------------------------------------------------------
+# Funcion 1: 
+# ----------------------------------------------------------------------
+      
 class IngredienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingrediente
@@ -76,7 +83,44 @@ class ReadRecetaSerializer(serializers.ModelSerializer):
             "ingrediente_receta",
         ]
         read_only_fields = ["id", "enlace_receta"] #campos que serviran para respuesta no entrada 
- 
+
+# Depedencia de funcion 2: Valoracion de recetas
+class ValoracionSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Valoracion
+        fields = ["id", "usuario", "receta", "valoracion"]
+
+    def create(self, validated_data):
+        valoracion = Valoracion.objects.create(**validated_data)
+        return valoracion
+      
+# ----------------------------------------------------------------------
+# Funcion 3: Modelo CalificacionReceta para Listado de recetas populares
+# ----------------------------------------------------------------------
+
+# Funcion CREATE
+class CalificacionRecetaCreateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CalificacionReceta
+        fields = ["receta", "promedio_valoracion", "cantidad_valoraciones"]
+        read_only_fields = ["id",]
+
+    def create(self, validated_data):        
+        calificacion_receta = CalificacionReceta.objects.create(**validated_data)
+        return calificacion_receta
+
+# Funcion READ & UPDATE
+class CalificacionRecetaUpdateSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = CalificacionReceta
+        fields = ["promedio_valoracion", "cantidad_valoraciones"]
+        read_only_fields = ["id", "receta",]
+
+    def update(self, instance, validated_data):
+        instance = CalificacionReceta(**validated_data)
+        instance.save()
+        return instance
+
 # ----------------------------------------------------------------------
 # Funcion 4: Ajuste de ingredientes segun cantidad de personas (R4)
 # ----------------------------------------------------------------------
