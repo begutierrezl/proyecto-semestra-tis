@@ -1,6 +1,7 @@
 from django.contrib.auth.models import User
+from django.db import transaction
 from rest_framework import serializers
-
+from .models import Receta, Ingrediente
 
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
@@ -13,6 +14,69 @@ class UserSerializer(serializers.ModelSerializer):
         return user
 
 
+class IngredienteSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Ingrediente
+        fields = [
+          "nombre_ingrediente",
+          "cantidad_ingrediente",
+          "unidad_medida"
+        ]
+
+    def create(self, validated_data):
+        ingrediente = Ingrediente.objects.create_user(**validated_data)
+        return ingrediente
+
+#serializador para crear las recetas
+class CreateRecetaSerializer(serializers.ModelSerializer):
+    #para incluir los ingredientes
+    ingrediente_receta = IngredienteSerializer(many=True)
+    class Meta:
+        model = Receta
+        fields = [
+            "id",
+            "nombre_receta",
+            "descripcion_corta",
+            "cantidad_personas",
+            "categoria",
+            "regimen_alimenticio",
+            "instrucciones_preparacion",
+            "enlace_receta",
+            "ingrediente_receta",
+        ]
+        read_only_fields = ["id", "enlace_receta"] #campos que serviran para respuesta no entrada 
+        
+    def create(self, validated_data):
+        #datos ingredientes
+        ingrediente_receta_data = validated_data.pop('ingrediente_receta')
+        receta= Receta.objects.create(**validated_data)
+        for ingred_data in ingrediente_receta_data:
+             Ingrediente.objects.create(receta=receta, **ingred_data)
+        #con el objeto receta creado y su id asignado, se crea el enlace y se guarda
+        #enlace_creado="https://www.libroderecetas.com/receta/"+ str(receta.id) #Para produccion
+        enlace_creado="http://127.0.0.1:8000/receta/"+ str(receta.id) #Para desarrollo
+        receta.enlace_receta=enlace_creado
+        receta.save(update_fields=["enlace_receta"])
+        return receta
+
+#serializador para recuperar recetas
+class ReadRecetaSerializer(serializers.ModelSerializer):
+    ingrediente_receta = IngredienteSerializer(many=True, read_only=True)
+    class Meta:
+        model = Receta
+        fields = [
+            "id",
+            "nombre_receta",
+            "descripcion_corta",
+            "cantidad_personas",
+            "categoria",
+            "regimen_alimenticio",
+            "instrucciones_preparacion",
+            "enlace_receta",
+            "ingrediente_receta",
+        ]
+        read_only_fields = ["id", "enlace_receta"] #campos que serviran para respuesta no entrada 
+ 
 # ----------------------------------------------------------------------
 # Funcion 4: Ajuste de ingredientes segun cantidad de personas (R4)
 # ----------------------------------------------------------------------
@@ -32,14 +96,12 @@ class ParametrosAjusteSerializer(serializers.Serializer):
         },
     )
 
-
 # Ingrediente ajustado: NOMBRE_INGREDIENTE, CANTIDAD_AJUSTADA, UNIDAD_MEDIDA (R4.6)
 # Solo lectura: son datos calculados por el sistema (R4.5)
 class IngredienteAjustadoSerializer(serializers.Serializer):
     nombre_ingrediente = serializers.CharField(read_only=True)
     cantidad_ajustada = serializers.FloatField(read_only=True)
     unidad_medida = serializers.CharField(read_only=True)
-
 
 # Salida 1 (R4.6): solo lectura (read_only=True), los datos vienen calculados
 # desde generar_receta_ajustada

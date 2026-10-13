@@ -16,13 +16,18 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from recetario.views import CreateUserView, AjusteIngredientesView
+from recetario.views import CreateUserView
+from recetario.views import ListRecetasView, CreateRecetaView,ListRecetaidView
+from recetario.views import AjusteIngredientesView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/user/register/", CreateUserView.as_view(), name="register"),
     path("api/token/", TokenObtainPairView.as_view(), name="get_token"),
+    path("api/receta/insert/", CreateRecetaView.as_view(), name="create_receta"),
+    path("api/receta/", ListRecetasView.as_view(), name="get_recetas"),
+    path("api/receta/<int:id>",ListRecetaidView.as_view(), name="get_receta"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
     # Funcion 4: Ajuste de ingredientes segun cantidad de personas

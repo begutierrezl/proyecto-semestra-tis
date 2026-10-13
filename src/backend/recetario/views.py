@@ -6,12 +6,9 @@ from rest_framework import generics
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.response import Response
-from .models import generar_receta_ajustada
-from .serializers import (
-    UserSerializer,
-    ParametrosAjusteSerializer,
-    RecetaAjustadaSerializer,
-)
+from .models import Receta, Ingrediente, generar_receta_ajustada
+from .serializers import UserSerializer, CreateRecetaSerializer, ReadRecetaSerializer
+from .serializers import ParametrosAjusteSerializer, RecetaAjustadaSerializer,
 
 # Create your views here.
 class CreateUserView(generics.CreateAPIView):
@@ -19,6 +16,24 @@ class CreateUserView(generics.CreateAPIView):
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
+#ingreso de receta
+class CreateRecetaView(generics.CreateAPIView):
+    queryset= Receta.objects.all()
+    serializer_class = CreateRecetaSerializer
+    permission_classes= [AllowAny]
+    
+#lista de todas las recetas
+class ListRecetasView(generics.ListAPIView):
+    queryset = Receta.objects.all()
+    serializer_class = ReadRecetaSerializer
+    permission_classes = [AllowAny]
+    
+#recupera una receta especifica por id
+class ListRecetaidView(generics.RetrieveAPIView):
+    queryset = Receta.objects.all()
+    serializer_class = ReadRecetaSerializer
+    permission_classes = [AllowAny]
+    lookup_field="id"
 
 # ----------------------------------------------------------------------
 # Funcion 4: Ajuste de ingredientes segun cantidad de personas (R4)
