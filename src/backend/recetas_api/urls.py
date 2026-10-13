@@ -17,7 +17,7 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, include
 from recetario.views import CreateUserView
-from recetario.views import ListRecetasView, CreateRecetaView,ListRecetaidView
+from recetario.views import ListRecetasView, CreateRecetaView, RetrieveRecetaIdView
 from recetario.views import RetrieveValoracionView
 from recetario.views import CreateCalificacionView, RetrieveUpdateCalificacionFromIdView, RetrieveUpdateCalifiacionFromRecetaView
 from recetario.views import AjusteIngredientesView
@@ -27,14 +27,11 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/user/register/", CreateUserView.as_view(), name="register"),
     path("api/token/", TokenObtainPairView.as_view(), name="get_token"),
-    path("api/receta/insert/", CreateRecetaView.as_view(), name="create_receta"),
-    path("api/receta/", ListRecetasView.as_view(), name="get_recetas"),
-    path("api/receta/<int:id>",ListRecetaidView.as_view(), name="get_receta"),
+    path("api/receta/insert/", CreateRecetaView.as_view(), name="create_receta"), #Funcion 1: Ingreso de Recetas
+    path("api/receta/", ListRecetasView.as_view(), name="get_recetas"), # Listar todas las recetas
+    path("api/receta/<int:id>",RetrieveRecetaIdView.as_view(), name="get_receta"), # Listar receta con id
     path("api/token/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
-    # Receta
-    path("api/receta/insert/", CreateRecetaView.as_view(), name="create_receta"),
-    path("api/receta/", RecetasListView.as_view(), name="get_recetas"),
     # Valoracion
     path("api/valoracion/<int:receta_id>/", RetrieveValoracionView.as_view(), name="get_valoracion"),
     # Calificacion

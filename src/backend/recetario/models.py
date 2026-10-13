@@ -15,7 +15,7 @@ from django.core.exceptions import ValidationError
 
 # Create your models here.
 
-#validador propio para validar el tamaño imagen
+#validador propio para validar el tamaño imagen en R1.7
 def validar_tamano_imagen(archivo):
     if archivo.size > 5 * 1024 * 1024: # si es mayor a 5MB (Restriccion R1.7)
         raise ValidationError("IMAGEN_REFERENCIAL no es un ingreso válido, supera el tamaño maximo de 5MB")
@@ -169,14 +169,14 @@ class Receta(models.Model):
         max_length=200, blank=True, 
         validators=[RegexValidator(
             #r"^https://www\.libroderecetas\.com/receta/\d+$", #Para uso en produccion
-            r"^http://127.0.0.1:8000/receta/\d+$", # Para uso en desarrollo
+            r"^http://127.0.0.1:9000/receta/\d+$", # Para uso en desarrollo
             "ENLACE_RECETA no es un enlace valido")],
     )
 
     #para printear nombre receta
     def __str__(self):
         return self.nombre_receta
-
+    # Funcion 1: Modelo de ingredientes que ingresan con la receta
 class Ingrediente(models.Model):
     receta = models.ForeignKey(
         Receta, on_delete=models.CASCADE, related_name="ingrediente_receta")
