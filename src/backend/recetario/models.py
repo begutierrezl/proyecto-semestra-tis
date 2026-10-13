@@ -1,11 +1,10 @@
+from decimal import Decimal, ROUND_HALF_UP
 from django.db import models, transaction
+from django.apps import apps
 from django.core.validators import MinLengthValidator, RegexValidator, FileExtensionValidator, MaxLengthValidator,MinValueValidator,MaxValueValidator
 from django.core.exceptions import ValidationError
 
 # Create your models here.
-
-
-
 
 #validador propio para validar el tamaño imagen
 def validar_tamano_imagen(archivo):
@@ -13,7 +12,69 @@ def validar_tamano_imagen(archivo):
         raise ValidationError("IMAGEN_REFERENCIAL no es un ingreso válido, supera el tamaño maximo de 5MB")
 
 
+# ----------------------------------------------------------------------
+# Funcion 4: Ajuste de ingredientes segun cantidad de personas (R4)
+# No requiere tabla nueva: CANTIDAD_AJUSTADA es un dato calculado (R4.5)
+# Dependencia de funcion 1 (ingresar receta): modelos Receta e IngredienteReceta
+# Advertencia: nombres de clase/campos pueden estar sujetos a cambio
+# ----------------------------------------------------------------------
 
+# R4.4 a R4.7: recupera ingredientes de la receta y arma la salida
+def generar_receta_ajustada(receta, cantidad_personas_deseada):
+    IngredienteReceta = apps.get_model("recetario", "IngredienteReceta")
+    ingredientes = IngredienteReceta.objects.filter(id_receta=receta.pk)
+
+    # R4.7: si la cantidad deseada es igual a la original, no se ejecuta R4.5
+    es_cantidad_original = cantidad_personas_deseada == receta.cantidad_personas
+
+    ingredientes_ajustados = []
+    for ingrediente in ingredientes:
+        if es_cantidad_original:
+            cantidad = ingrediente.cantidad_ingrediente
+        else:
+            cantidad = calcular_cantidad_ajustada(
+                ingrediente.cantidad_ingrediente,
+                receta.cantidad_personas,
+                cantidad_personas_deseada,
+            )
+        ingredientes_ajustados.append({
+            "nombre_ingrediente": ingrediente.nombre_ingrediente,
+            "cantidad_ajustada": cantidad,
+            "unidad_medida": ingrediente.unidad_medida,
+        })
+
+    if es_cantidad_original:
+        # R4.7
+        mensaje = "Las cantidades mostradas corresponden a la cantidad de personas original de la receta"
+    else:
+        # R4.6: indicar explicitamente para cuantas personas son las cantidades
+        mensaje = f"Las cantidades mostradas corresponden a {cantidad_personas_deseada} personas"
+
+    return {
+        "nombre_receta": receta.nombre_receta,
+        "descripcion_corta": receta.descripcion_corta,
+        "categoria": receta.categoria,
+        "regimen_alimenticio": receta.regimen_alimenticio,
+        "cantidad_personas_deseada": cantidad_personas_deseada,
+        "ingredientes_ajustados": ingredientes_ajustados,
+        "instrucciones_preparacion": receta.instrucciones_preparacion,
+        "mensaje": mensaje,
+    }
+        
+# R4.5: CANTIDAD_AJUSTADA = (CANTIDAD_INGREDIENTE / CANTIDAD_PERSONAS) * CANTIDAD_PERSONAS_DESEADA
+# - CANTIDAD_INGREDIENTE es decimal (R1.5), se convierte via str para crear el Decimal
+#   sin arrastrar el error de punto flotante
+# - Maximo 2 decimales
+def calcular_cantidad_ajustada(cantidad_ingrediente, cantidad_personas, cantidad_personas_deseada):
+    if cantidad_personas <= 0:
+        # R1.8 garantiza CANTIDAD_PERSONAS > 0, esto es solo una proteccion
+        raise ValueError("CANTIDAD_PERSONAS debe ser mayor a cero")
+    ajustada = (
+        Decimal(str(cantidad_ingrediente)) / Decimal(cantidad_personas)
+    ) * Decimal(cantidad_personas_deseada)
+    return float(ajustada.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP))
+
+# Funcion 1: Modelo Receta
 class Receta(models.Model):
 
     REGIMENES_ALIMENTICIOS = { 
@@ -24,8 +85,9 @@ class Receta(models.Model):
         "VEGETARIANO": "Vegetariano",
         "VEGANO": "Vegano",
         "SIN_LACTOSA": "Sin lactosa"
-        }
-    CATEGORIAS={
+    }
+    
+    CATEGORIAS = {
         "VACIO":"",
         "POSTRES": "Postres",
         "ENSALADAS": "Ensaladas", 
@@ -34,7 +96,8 @@ class Receta(models.Model):
         "ENTRADAS": "Entradas",
         "BEBIDAS": "Bebidas",
         "DESAYUNOS": "Desayunos"
-        }
+    }
+    
     # R1.1 y R1.17.1: asignado por la base de datos
     id = models.BigAutoField(primary_key=True)
 
@@ -101,12 +164,9 @@ class Receta(models.Model):
             "ENLACE_RECETA no es un enlace valido")],
     )
 
-
     #para printear nombre receta
     def __str__(self):
         return self.nombre_receta
-
-
 
 class Ingrediente(models.Model):
     receta = models.ForeignKey(
@@ -140,9 +200,8 @@ class Ingrediente(models.Model):
         "AL_GUSTO": "al gusto"
         }
 
-
     unidad_medida = models.CharField(max_length=20, choices=UNIDADES)
-
 
     def __str__(self):
         return f"{self.nombre_ingrediente} ({self.cantidad_ingrediente} {self.unidad_medida})"
+
