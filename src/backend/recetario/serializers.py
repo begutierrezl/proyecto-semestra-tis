@@ -9,14 +9,21 @@ from .models import (
 )
 
 class UserSerializer(serializers.ModelSerializer):
+
+    id_usuario = serializers.SerializerMethodField()
+
     class Meta:
         model = User
-        fields = ["id", "username", "password"]
+        fields = ["id_usuario", "username", "password"]
         extra_kwargs = {"password": {"write_only": True}}
+        
+    def get_id_usuario(self, obj):
+        return f"{obj.id:012d}"
 
     def create(self, validated_data):
         user = User.objects.create_user(**validated_data)
         return user
+
 # ----------------------------------------------------------------------
 # Funcion 1: 
 # ----------------------------------------------------------------------
@@ -86,9 +93,15 @@ class ReadRecetaSerializer(serializers.ModelSerializer):
 
 # Depedencia de funcion 2: Valoracion de recetas
 class ValoracionSerializer(serializers.ModelSerializer):
+
+    id_valoracion = serializers.SerializerMethodField()
+    
     class Meta:
         model = Valoracion
-        fields = ["id", "usuario", "receta", "valoracion"]
+        fields = ["id_valoracion", "usuario", "receta", "valoracion"]
+
+    def get_id_valoracion(self, obj):
+        return f"{obj.id:012d}"
 
     def create(self, validated_data):
         valoracion = Valoracion.objects.create(**validated_data)
