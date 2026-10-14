@@ -15,9 +15,9 @@ const BuscadorRecetas = () => {
         setResultados([]);
 
         const url = new URL('http://localhost:8000/api/recetas/buscar/');
-        if (nombre) url.searchParams.append('NOMBRE_RECETA', nombre);
-        if (categoria) url.searchParams.append('CATEGORIA', categoria);
-        if (regimen) url.searchParams.append('REGIMEN_ALIMENTICIO', regimen);
+        if (nombre) url.searchParams.append('nombre_receta', nombre);
+        if (categoria) url.searchParams.append('categoria', categoria);
+        if (regimen) url.searchParams.append('regimen_alimenticio', regimen);
 
         try {
             const respuesta = await fetch(url);
@@ -31,6 +31,22 @@ const BuscadorRecetas = () => {
         } catch (error) {
             setMensaje("Error al conectar con el servidor.");
         }
+    };
+
+    const formatoCategoria = {
+        'PLATO_FONDO': 'Plato de Fondo',
+        'ENSALADAS': 'Ensaladas',
+        'POSTRES': 'Postres',
+        'DESAYUNOS': 'Desayunos',
+        'SOPAS': 'Sopas'
+    };
+
+    const formatoRegimen = {
+        'NORMAL': 'Normal',
+        'VEGANO': 'Vegano',
+        'SIN_LACTOSA': 'Sin Lactosa',
+        'DIABETICO': 'Diabético',
+        'VEGETARIANO': 'Vegetariano'
     };
 
     return (
@@ -51,7 +67,7 @@ const BuscadorRecetas = () => {
                         <option value="">Cualquier Categoría</option>
                         <option value="postres">Postres</option>
                         <option value="ensaladas">Ensaladas</option>
-                        <option value="plato de fondo">Plato de fondo</option>
+                        <option value="plato_fondo">Plato de fondo</option>
                         <option value="sopas">Sopas</option>
                         <option value="entradas">Entradas</option>
                         <option value="bebidas">Bebidas</option>
@@ -61,11 +77,11 @@ const BuscadorRecetas = () => {
                     <select value={regimen} onChange={(e) => setRegimen(e.target.value)} className="buscador-select">
                         <option value="">Cualquier Régimen</option>
                         <option value="normal">Normal</option>
-                        <option value="diabético">Diabético</option>
-                        <option value="celíaco">Celíaco</option>
+                        <option value="diabetico">Diabético</option>
+                        <option value="celiaco">Celíaco</option>
                         <option value="vegetariano">Vegetariano</option>
                         <option value="vegano">Vegano</option>
-                        <option value="sin lactosa">Sin lactosa</option>
+                        <option value="sin_lactosa">Sin lactosa</option>
                     </select>
                 </div>
 
@@ -76,11 +92,11 @@ const BuscadorRecetas = () => {
 
             <div className="resultados-lista">
                 {resultados.map((receta) => (
-                    <div key={receta.ID_RECETA} className="receta-card">
-                        <h3>{receta.NOMBRE_RECETA}</h3>
-                        <p><strong>Categoría:</strong> {receta.CATEGORIA} | <strong>Régimen:</strong> {receta.REGIMEN_ALIMENTICIO}</p>
-                        <p>{receta.DESCRIPCION_CORTA}</p>
-                        <a href={receta.ENLACE_RECETA} target="_blank" rel="noreferrer" className="receta-link">Ver Receta Completa</a>
+                    <div key={receta.id} className="receta-card">
+                        <h3>{receta.nombre_receta}</h3>
+                        <p><strong>Categoría:</strong> {formatoCategoria[receta.categoria]} | <strong>Régimen:</strong> {formatoRegimen[receta.regimen_alimenticio]}</p>
+                        <p>{receta.descripcion_corta}</p>
+                        <a href={receta.enlace_receta} target="_blank" rel="noreferrer" className="receta-link">Ver Receta Completa</a>
                     </div>
                 ))}
             </div>
