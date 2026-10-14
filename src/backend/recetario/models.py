@@ -30,8 +30,7 @@ def validar_tamano_imagen(archivo):
 
 # R4.4 a R4.7: recupera ingredientes de la receta y arma la salida
 def generar_receta_ajustada(receta, cantidad_personas_deseada):
-    IngredienteReceta = apps.get_model("recetario", "IngredienteReceta")
-    ingredientes = IngredienteReceta.objects.filter(id_receta=receta.pk)
+    ingredientes = Ingrediente.objects.filter(receta=receta)
 
     # R4.7: si la cantidad deseada es igual a la original, no se ejecuta R4.5
     es_cantidad_original = cantidad_personas_deseada == receta.cantidad_personas
