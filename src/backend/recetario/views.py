@@ -140,7 +140,7 @@ class AjusteIngredientesView(generics.RetrieveAPIView):
 class RegistrarOActualizarValoracionView(APIView):
     """
     Controlador para procesar la emisión de valoraciones.
-    Cumple con R2.8, R2.8.1, R2.8.2, R2.8.3, R2.9 y R2.10.
+    
     """
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
