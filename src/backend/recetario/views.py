@@ -136,16 +136,7 @@ class AjusteIngredientesView(generics.RetrieveAPIView):
 
 # ======================================================================
 class RegistrarValoracionView(APIView):
-    """
-<<<<<<< HEAD
-    Crea una nueva valoración.
-    Cumple con R2.8, R2.8.1, R2.8.2, R2.9 y R2.10.
-    Método: POST
-=======
-    Controlador para procesar la emisión de valoraciones.
-    
->>>>>>> 99895f494d8d5719a5c3b67f61a6b10ccd465053
-    """
+
     permission_classes = [AllowAny]
     def post(self, request, *args, **kwargs):
         id_usuario = request.data.get("id_usuario") or request.data.get("usuario")
@@ -288,10 +279,8 @@ class ActualizarValoracionView(APIView):
                 "id_receta": receta.id,
                 "valoracion": valoracion_existente.valoracion
             },
-<<<<<<< HEAD
-            status=status.HTTP_200_OK
-        )
-=======
+
+
             status=status.HTTP_201_CREATED
         )
->>>>>>> 99895f494d8d5719a5c3b67f61a6b10ccd465053
+
