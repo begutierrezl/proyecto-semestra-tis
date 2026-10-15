@@ -18,7 +18,7 @@ from django.contrib import admin
 from django.urls import path, include
 from recetario.views import CreateUserView
 from recetario.views import ListRecetasView, CreateRecetaView, RetrieveRecetaIdView
-from recetario.views import RetrieveValoracionView
+from recetario.views import RetrieveValoracionView, RegistrarOActualizarValoracionView
 from recetario.views import CreateCalificacionView, RetrieveUpdateCalificacionFromIdView, RetrieveUpdateCalifiacionFromRecetaView
 from recetario.views import AjusteIngredientesView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
@@ -41,4 +41,5 @@ urlpatterns = [
     path("api/calificacion/update/from_receta/<int:receta_id>/", RetrieveUpdateCalifiacionFromRecetaView.as_view(), name="update_calificacion"),
     # Funcion 4: Ajuste de ingredientes segun cantidad de personas
     path("api/get/receta/<int:id_receta>/ajuste/", AjusteIngredientesView.as_view(), name="ajuste_ingredientes"),
+    path("api/valoracion/registrar/", RegistrarOActualizarValoracionView.as_view(), name="registrar_valoracion"),
 ]

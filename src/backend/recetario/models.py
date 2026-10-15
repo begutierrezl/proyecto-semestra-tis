@@ -218,11 +218,11 @@ class Valoracion(models.Model):
 
     class VALORACION(models.IntegerChoices):
     
-    NO_GUSTA_PARA_NADA = 1, "No gusta para nada"
-    NO_ME_GUSTA = 2, "No me gusta"
-    INDIFERENTE = 3, "Indiferente"
-    ME_GUSTA = 4, "Me gusta"
-    ME_GUSTA_MUCHO = 5, "Me gusta mucho"
+        NO_GUSTA_PARA_NADA = 1, "No gusta para nada"
+        NO_ME_GUSTA = 2, "No me gusta"
+        INDIFERENTE = 3, "Indiferente"
+        ME_GUSTA = 4, "Me gusta"
+        ME_GUSTA_MUCHO = 5, "Me gusta mucho"
 
     id = models.BigAutoField(primary_key=True, editable=False)
     usuario = models.ForeignKey(

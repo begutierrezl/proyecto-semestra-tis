@@ -19,6 +19,7 @@ from .serializers import CreateRecetaSerializer, ReadRecetaSerializer
 from .serializers import ValoracionSerializer
 from .serializers import CalificacionRecetaCreateSerializer, CalificacionRecetaUpdateSerializer
 from .serializers import ParametrosAjusteSerializer, RecetaAjustadaSerializer
+from rest_framework.views import APIView
 
 # Create your views here.
 
@@ -131,3 +132,94 @@ class AjusteIngredientesView(generics.RetrieveAPIView):
         datos = generar_receta_ajustada(receta, cantidad_deseada)
         serializer = self.get_serializer(datos)
         return Response(serializer.data)
+
+
+# ======================================================================
+# Función 2: Valoración de Recetas (R2)
+# ======================================================================
+class RegistrarOActualizarValoracionView(APIView):
+    """
+    Controlador para procesar la emisión de valoraciones.
+    Cumple con R2.8, R2.8.1, R2.8.2, R2.8.3, R2.9 y R2.10.
+    """
+    permission_classes = [AllowAny]
+    def post(self, request, *args, **kwargs):
+        # 1. Recuperar los datos del cuerpo de la petición
+        id_usuario = request.data.get("id_usuario") or request.data.get("usuario")
+        id_receta = request.data.get("id_receta") or request.data.get("receta")
+        valor_valoracion = request.data.get("valoracion")
+        # Validación del rango Likert (1 a 5)
+        try:
+            valor_entero = int(valor_valoracion)
+            if valor_entero < 1 or valor_entero > 5:
+                raise ValueError()
+        except (TypeError, ValueError):
+            return Response(
+                {"error": "VALORACION debe ser un número entero entre 1 y 5."},
+                status=status.HTTP_400_BAD_REQUEST
+            )
+        # ------------------------------------------------------------------
+        # R2.9: Verificar que ID_USUARIO exista previamente en la base de datos
+        # ------------------------------------------------------------------
+        try:
+            usuario = User.objects.get(id=id_usuario)
+        except (User.DoesNotExist, ValueError):
+            return Response(
+                {"mensaje": "Usuario no registrado. No es posible realizar la valoración"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        # ------------------------------------------------------------------
+        # R2.10: Verificar que ID_RECETA exista previamente en la base de datos
+        # ------------------------------------------------------------------
+        try:
+            receta = Receta.objects.get(id=id_receta)
+        except (Receta.DoesNotExist, ValueError):
+            return Response(
+                {"mensaje": "Receta no encontrada. No es posible realizar la valoración"},
+                status=status.HTTP_404_NOT_FOUND
+            )
+        # ------------------------------------------------------------------
+        # R2.8.1: Consultar si ya existe el par simultáneo (ID_USUARIO, ID_RECETA)
+        # ------------------------------------------------------------------
+        valoracion_existente = Valoracion.objects.filter(
+            usuario=usuario,
+            receta=receta
+        ).first()
+        # ------------------------------------------------------------------
+        # R2.8.3: Si la consulta arroja un registro existente
+        # ------------------------------------------------------------------
+        if valoracion_existente:
+            # Impide la creación de un nuevo identificador
+            # Actualiza el campo VALORACION sobre el ID_VALORACION ya asociado
+            valoracion_existente.valoracion = valor_entero
+            valoracion_existente.save(update_fields=["valoracion"])
+            return Response(
+                {
+                    "mensaje": "Su valoración ha sido actualizada exitosamente",
+                    "id_valoracion": f"{valoracion_existente.id:012d}",
+                    "id_usuario": f"{usuario.id:012d}",
+                    "id_receta": receta.id,
+                    "valoracion": valoracion_existente.valoracion
+                },
+                status=status.HTTP_200_OK
+            )
+        # ------------------------------------------------------------------
+        # R2.8.2: Si la consulta no arroja resultados (combinación es única)
+        # R2.8: Para ID_VALORACION, el sistema verifica que sea único e irrepetible
+        # ------------------------------------------------------------------
+        nueva_valoracion = Valoracion(
+            usuario=usuario,
+            receta=receta,
+            valoracion=valor_entero
+        )
+        nueva_valoracion.save()
+        return Response(
+            {
+                "mensaje": "Valoración registrada exitosamente",
+                "id_valoracion": f"{nueva_valoracion.id:012d}",
+                "id_usuario": f"{usuario.id:012d}",
+                "id_receta": receta.id,
+                "valoracion": nueva_valoracion.valoracion
+            },
+            status=status.HTTP_201_CREATED
+        )
