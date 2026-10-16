@@ -1,5 +1,8 @@
 #!/bin/sh
 
+echo "Dev: Forzando migraciones"
+python manage.py makemigrations
+
 echo "Running migrations..."
 python manage.py migrate
 

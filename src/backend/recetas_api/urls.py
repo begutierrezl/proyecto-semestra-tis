@@ -1,7 +1,7 @@
 """
 URL configuration for recetas_api project.
 
-The `urlpatterns` list routes URLs to views. For more information please see:
+The urlpatterns list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/6.1/topics/http/urls/
 Examples:
 Function views
@@ -16,7 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from recetario.views import CreateUserView, buscar_recetas
+from recetario.views import CreateUserView
+from recetario.views import ListRecetasView, CreateRecetaView, RetrieveRecetaIdView
+from recetario.views import RetrieveValoracionView, RegistrarValoracionView, ActualizarValoracionView
+from recetario.views import CreateCalificacionView, RetrieveUpdateCalificacionFromIdView, RetrieveUpdateCalifiacionFromRecetaView
+from recetario.views import AjusteIngredientesView
+from recetario.views import buscar_recetas
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 
 urlpatterns = [
@@ -25,5 +30,21 @@ urlpatterns = [
     path("api/token/", TokenObtainPairView.as_view(), name="get_token"),
     path("api/token/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
-    path("api/recetas/buscar/", buscar_recetas, name="buscar_recetas"),
+    # Receta
+    path("api/receta/insert/", CreateRecetaView.as_view(), name="create_receta"), #Funcion 1: Ingreso de Recetas
+    path("api/receta/", ListRecetasView.as_view(), name="get_recetas"), # Listar todas las recetas
+    path("api/receta/<int:id>",RetrieveRecetaIdView.as_view(), name="get_receta"), # Listar receta con id    
+    # Valoracion
+    path("api/valoracion/<int:receta_id>/", RetrieveValoracionView.as_view(), name="get_valoracion_receta"),
+    path("api/valoracion/registrar/", RegistrarValoracionView.as_view(), name="registrar_valoracion"),
+    path("api/valoracion/actualizar/", ActualizarValoracionView.as_view(), name="actualizar_valoracion"),
+    # Calificacion
+    path("api/calificacion/get/from_id/<int:id>/", RetrieveUpdateCalificacionFromIdView.as_view(), name="get_calificacion"),
+    path("api/calificacion/get/from_receta/<int:receta_id>/", RetrieveUpdateCalifiacionFromRecetaView.as_view(), name="get_calificacion_receta"),
+    path("api/calificacion/insert/", CreateCalificacionView.as_view(), name="insert_calificacion"),
+    path("api/calificacion/update/from_receta/<int:receta_id>/", RetrieveUpdateCalifiacionFromRecetaView.as_view(), name="update_calificacion"),
+    # Funcion 4: Ajuste de ingredientes segun cantidad de personas
+    path("api/get/receta/<int:id_receta>/ajuste/", AjusteIngredientesView.as_view(), name="ajuste_ingredientes"),
+    # Funcion 5
+    path("api/receta/buscar/", buscar_recetas, name="buscar_recetas"),
 ]
