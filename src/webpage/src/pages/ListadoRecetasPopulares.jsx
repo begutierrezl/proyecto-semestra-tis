@@ -14,12 +14,13 @@ function ListadoRecetasPopulares() {
     // Calificacion de una receta, por receta en 'recetas'
     const listado_recetas_populares = useRef([]);
  
-    // captura la promesa de informacion y obtiene la cantidad de valoraciones
+    // Implementacion de requisito 3.8.1
     const contarValoraciones = (valoraciones) => {
         return valoraciones.length;
     }
 
-    // captura la promesa de informacion y obtiene el promedio de valoraciones
+    // Implementacion de requisito 3.8.2: Aplicacion de formula 
+    // SUMA(VALORACION)/CANTIDAD_VALORACIONES = PROMEDIO_VALORACION
     const promedioValoracion = (valoraciones, cantidad_valoraciones) => {
         let suma = 0;
         for (let index = 0; index < valoraciones.length; index++) {
@@ -29,6 +30,7 @@ function ListadoRecetasPopulares() {
         return suma/cantidad_valoraciones; 
     } 
 
+    // Implementacion de requisito funcional: R3.7
     const getRecetas = () => {
         // crea un promise para el axios request get
         const promise = api.get("/api/receta/");
@@ -38,18 +40,23 @@ function ListadoRecetasPopulares() {
         return dataPromise;
     }
 
+    // Implementacion parcial de requisito funcional R3.8
     const getValoracionesDeReceta = (id_receta) => {
         const promise = api.get(`/api/valoracion/${id_receta}/`)
         const dataPromise = promise.then((response) => response.data);
         return dataPromise;
     };
 
+    // Implementacion del requisito funcional 3.9
     const getCalificacionReceta = (id_receta) => {
         const promise = api.get(`/api/calificacion/get/from_receta/${id_receta}/`);
         const dataPromise = promise.then(response => response.data);
         return dataPromise
     }
 
+    // Implementacion abstracta de requisto 3.8
+    // Realiza las operaciones descritas en los requisitos R3.8.1, R3.8.2 sobre las
+    // valoraciones de una receta (id_receta) en particular
     const calculateDatosCalificacion = (valoraciones, id_receta) => {
         const calificacion = new Calificacion(0, 0, 0);
         calificacion.idReceta = id_receta;
@@ -58,6 +65,8 @@ function ListadoRecetasPopulares() {
         return calificacion;
     }
 
+    // Implementacion de caso negativo del requisito 3.10: 
+    // "..., De lo contrario, el sistema ingresara los campos ID_CALIFICACION, ID_RECETA, CANTIDAD_VALORACIONES, PROMEDIO_VALORACION; ..."
     const createCalificacion = (id_receta, cantidad_valoraciones, promedio_valoracion) => {
         api.post("api/calificacion/insert/", {id_receta, cantidad_valoraciones, promedio_valoracion})
         .then((respuesta) => {
@@ -67,6 +76,8 @@ function ListadoRecetasPopulares() {
         .catch((err) => alert(err))
     }
 
+    // Implementacion de caso positivo del requisito 3.10:
+    // "En caso de que R3.9 sea exitoso, el sistema actualizará los campos CANTIDAD_VALORACIONES, PROMEDIO_VALORACION, ..."
     const updateCalificacion = (id_receta, cantidad_valoraciones, promedio_valoracion) => {
         let sonDiferentes = false
         getCalificacionReceta(id_receta)
@@ -90,14 +101,18 @@ function ListadoRecetasPopulares() {
     }
 
     const updateCalificaciones = () => {
-        // recupera valoraciones de cada receta recuperada
+        // Recupera todas las recetas
         getRecetas()
         .then(data => { for (let index = 0; index < data.length; index++) {
             const receta = data[index];
+            // Validacion no especificada adicional para evitar duplicacion de datos
             if (receta.id in recetas_id.current) continue;
             recetas_id.current.push(receta.id);
+            // Recupera las valoraciones de una receta en particular
             getValoracionesDeReceta(receta.id)
             .then(data => {
+                // Validacion exigida por el requisito 3.8.2, cantidad_valoraciones >= 1
+                // donde cantidad_valoraciones = data.length en este caso
                 if (!(data.length === 0))
                     calificaciones.current.push(calculateDatosCalificacion(data, receta.id));
                 else 
@@ -110,6 +125,7 @@ function ListadoRecetasPopulares() {
         console.log(calificaciones.current);
     }
 
+    // Implementacion de requisito funcional R3.9
     // mejorar el codigo, los errores no estan siendo manejados correctamente
     const checkCalificacionExiste = (id_receta) => {
         let existe = true;
@@ -124,6 +140,9 @@ function ListadoRecetasPopulares() {
         return existe
     }
 
+    // Implementacion de requisito de obligatoriedad y opcionalidad de los datos R3.6
+    // La validacion es necesaria dado que los datos son opcionales, por lo que es necesario
+    // obtener una garantia de su validez antes de subirlos a la base de datos
     const isDatosCalificacionValidos = (calificacion) => {
         if (!(calificacion === Calificacion)) return false;
         if (
@@ -134,6 +153,7 @@ function ListadoRecetasPopulares() {
         return false;
     }
 
+    // Implementacion de requisito funcional R3.13
     const ordenarRecetasCalificadas = () => {
         return []
     };

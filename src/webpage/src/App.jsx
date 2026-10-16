@@ -5,7 +5,7 @@ import Register from "./pages/Register"
 import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/ProtectedRoute"
-import ListadoRecetaPopulares from "./components/ListadoRecetasPopulares"
+import ListadoRecetaPopulares from "./pages/ListadoRecetasPopulares"
 
 function Logout() {
   localStorage.clear()

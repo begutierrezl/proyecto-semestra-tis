@@ -253,6 +253,7 @@ class Valoracion(models.Model):
 
 class CalificacionReceta(models.Model): 
     # Campo ID_CALIFICACION especificado en R3.1 es implementado de forma implicita por Django AutoFields
+    id = models.BigAutoField(primary_key=True)
 
     # Campo ID_RECETA especificado en R1.1
     # - Implementado con una relacion floja absoluta (lazy absolute relationship) 
@@ -264,7 +265,7 @@ class CalificacionReceta(models.Model):
         Receta,
         on_delete=models.CASCADE,
         primary_key=False,
-        related_name="receta"
+        related_name="calificacion_receta"
     )
 
     # Campo PROMEDIO_VALORACION especificado en R3.2
