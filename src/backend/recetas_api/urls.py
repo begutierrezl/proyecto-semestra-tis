@@ -18,10 +18,11 @@ from django.contrib import admin
 from django.urls import path, include
 from recetario.views import CreateUserView
 from recetario.views import ListRecetasView, CreateRecetaView, RetrieveRecetaIdView
-from recetario.views import RetrieveValoracionView
+from recetario.views import RetrieveValoracionView, RegistrarValoracionView, ActualizarValoracionView
 from recetario.views import CreateCalificacionView, RetrieveUpdateCalificacionFromIdView, RetrieveUpdateCalifiacionFromRecetaView
 from recetario.views import AjusteIngredientesView
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -34,6 +35,8 @@ urlpatterns = [
     path("api-auth/", include("rest_framework.urls")),
     # Valoracion
     path("api/valoracion/<int:receta_id>/", RetrieveValoracionView.as_view(), name="get_valoracion"),
+    path("api/valoracion/registrar/", RegistrarValoracionView.as_view(), name="registrar_valoracion"),
+    path("api/valoracion/actualizar/", ActualizarValoracionView.as_view(), name="actualizar_valoracion"),
     # Calificacion
     path("api/calificacion/get/from_id/<int:id>/", RetrieveUpdateCalificacionFromIdView.as_view(), name="get_calificacion"),
     path("api/calificacion/get/from_receta/<int:receta_id>/", RetrieveUpdateCalifiacionFromRecetaView.as_view(), name="get_calificacion_receta"),
@@ -41,4 +44,5 @@ urlpatterns = [
     path("api/calificacion/update/from_receta/<int:receta_id>/", RetrieveUpdateCalifiacionFromRecetaView.as_view(), name="update_calificacion"),
     # Funcion 4: Ajuste de ingredientes segun cantidad de personas
     path("api/get/receta/<int:id_receta>/ajuste/", AjusteIngredientesView.as_view(), name="ajuste_ingredientes"),
+    
 ]
