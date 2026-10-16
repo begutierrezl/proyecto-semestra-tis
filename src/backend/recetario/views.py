@@ -281,6 +281,6 @@ class ActualizarValoracionView(APIView):
             },
 
 
-            status=status.HTTP_201_CREATED
+            status=status.HTTP_200_OK
         )
 
