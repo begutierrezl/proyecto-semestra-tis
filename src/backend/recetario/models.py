@@ -175,7 +175,8 @@ class Receta(models.Model):
     #para printear nombre receta
     def __str__(self):
         return self.nombre_receta
-    # Funcion 1: Modelo de ingredientes que ingresan con la receta
+    
+# Funcion 1: Modelo de ingredientes que ingresan con la receta
 class Ingrediente(models.Model):
     receta = models.ForeignKey(
         Receta, on_delete=models.CASCADE, related_name="ingrediente_receta")

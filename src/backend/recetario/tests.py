@@ -13,7 +13,20 @@ class IdCalificacionTestCase(TestCase):
 
     @classmethod
     def setUpTestData(self):
-        self.receta = Receta.objects.create(nombre="placeholder")
+        self.receta = Receta.objects.create(
+            nombre_receta="placeholder",
+            descripcion_corta="Receta de prueba para el ajuste de ingredientes",
+            cantidad_personas=12,
+            categoria="PLATO_FONDO",
+            regimen_alimenticio="NORMAL",
+            instrucciones_preparacion="Mezclar todos los ingredientes y cocinar por veinte minutos",
+        )
+        Ingrediente.objects.create(
+            receta=self.receta,
+            nombre_ingrediente="placeholder_ingrediente",
+            cantidad_ingrediente=10,
+            unidad_medida="GRAMOS",
+        )
     
     def testValidarIdCalificacion_UT_R31_01(self):
         calificacion = CalificacionReceta(
@@ -98,7 +111,20 @@ class PromedioValoracionTestCase(TestCase):
 
     @classmethod
     def setUpTestData(self):
-        self.receta = Receta.objects.create(nombre="placeholder")
+            self.receta = Receta.objects.create(
+                nombre_receta="placeholder",
+                descripcion_corta="Receta de prueba para el ajuste de ingredientes",
+                cantidad_personas=12,
+                categoria="PLATO_FONDO",
+                regimen_alimenticio="NORMAL",
+                instrucciones_preparacion="Mezclar todos los ingredientes y cocinar por veinte minutos",
+            )
+            Ingrediente.objects.create(
+                receta=self.receta,
+                nombre_ingrediente="placeholder_ingrediente",
+                cantidad_ingrediente=10,
+                unidad_medida="GRAMOS",
+            )
 
     def testValidarPromedioValoracion_UT_R32_01(self):
         calificacion = CalificacionReceta(
@@ -208,7 +234,20 @@ class CantidadValoracionesTestCase(TestCase):
 
     @classmethod
     def setUpTestData(self):
-        self.receta = Receta.objects.create(nombre="placeholder")
+            self.receta = Receta.objects.create(
+                nombre_receta="placeholder",
+                descripcion_corta="Receta de prueba para el ajuste de ingredientes",
+                cantidad_personas=12,
+                categoria="PLATO_FONDO",
+                regimen_alimenticio="NORMAL",
+                instrucciones_preparacion="Mezclar todos los ingredientes y cocinar por veinte minutos",
+            )
+            Ingrediente.objects.create(
+                receta=self.receta,
+                nombre_ingrediente="placeholder_ingrediente",
+                cantidad_ingrediente=10,
+                unidad_medida="GRAMOS",
+            )
 
     def testValidarCantidadValoraciones_UT_R33_01(self):
         calificacion = CalificacionReceta(
