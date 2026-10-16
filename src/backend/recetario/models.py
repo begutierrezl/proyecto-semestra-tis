@@ -244,9 +244,6 @@ class Valoracion(models.Model):
             verbose_name="Valoración"
         )
 
-
-
-
 # Funcion 3
 # referencias:
 # https://docs.djangoproject.com/en/6.1/ref/models/instances/

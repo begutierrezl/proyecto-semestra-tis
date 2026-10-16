@@ -28,13 +28,14 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/user/register/", CreateUserView.as_view(), name="register"),
     path("api/token/", TokenObtainPairView.as_view(), name="get_token"),
-    path("api/receta/insert/", CreateRecetaView.as_view(), name="create_receta"), #Funcion 1: Ingreso de Recetas
-    path("api/receta/", ListRecetasView.as_view(), name="get_recetas"), # Listar todas las recetas
-    path("api/receta/<int:id>",RetrieveRecetaIdView.as_view(), name="get_receta"), # Listar receta con id
     path("api/token/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
+    # Receta
+    path("api/receta/insert/", CreateRecetaView.as_view(), name="create_receta"), #Funcion 1: Ingreso de Recetas
+    path("api/receta/", ListRecetasView.as_view(), name="get_recetas"), # Listar todas las recetas
+    path("api/receta/<int:id>",RetrieveRecetaIdView.as_view(), name="get_receta"), # Listar receta con id    
     # Valoracion
-    path("api/valoracion/<int:receta_id>/", RetrieveValoracionView.as_view(), name="get_valoracion"),
+    path("api/valoracion/<int:receta_id>/", RetrieveValoracionView.as_view(), name="get_valoracion_receta"),
     path("api/valoracion/registrar/", RegistrarValoracionView.as_view(), name="registrar_valoracion"),
     path("api/valoracion/actualizar/", ActualizarValoracionView.as_view(), name="actualizar_valoracion"),
     # Calificacion
