@@ -21,8 +21,8 @@ from recetario.views import ListRecetasView, CreateRecetaView, RetrieveRecetaIdV
 from recetario.views import RetrieveValoracionView, RegistrarValoracionView, ActualizarValoracionView
 from recetario.views import CreateCalificacionView, RetrieveUpdateCalificacionFromIdView, RetrieveUpdateCalifiacionFromRecetaView
 from recetario.views import AjusteIngredientesView
+from recetario.views import buscar_recetas
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -45,5 +45,6 @@ urlpatterns = [
     path("api/calificacion/update/from_receta/<int:receta_id>/", RetrieveUpdateCalifiacionFromRecetaView.as_view(), name="update_calificacion"),
     # Funcion 4: Ajuste de ingredientes segun cantidad de personas
     path("api/get/receta/<int:id_receta>/ajuste/", AjusteIngredientesView.as_view(), name="ajuste_ingredientes"),
-    
+    # Funcion 5
+    path("api/receta/buscar/", buscar_recetas, name="buscar_recetas"),
 ]
