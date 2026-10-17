@@ -5,7 +5,8 @@ import Register from "./pages/Register"
 import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/ProtectedRoute"
-import ListadoRecetaPopulares from "./pages/ListadoRecetasPopulares"
+import BuscadorRecetas from "./pages/BuscadorRecetas"
+import ListadoRecetaPopulares from "./components/ListadoRecetasPopulares"
 
 function Logout() {
   localStorage.clear()
@@ -25,6 +26,7 @@ function App() {
         <Route path="/login" element={<Login />} />
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />
+        <Route path="/buscar" element={<BuscadorRecetas />} />
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
