@@ -269,13 +269,14 @@ class CalificacionReceta(models.Model):
     )
 
     # Campo PROMEDIO_VALORACION especificado en R3.2
-    promedio_valoracion = models.FloatField(
+    promedio_valoracion = models.DecimalField(
         blank=True, 
-        db_default=1, 
+        db_default=Decimal(1), 
+        max_digits=2,
+        decimal_places=1,
         validators=[
             MaxValueValidator(5),
             MinValueValidator(1),
-            DecimalValidator(max_digits=None, decimal_places=1),
         ], 
         db_comment="En escala de Likert, >=1 y <=5"
     )
