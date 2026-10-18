@@ -27,7 +27,10 @@ function ListadoRecetasPopulares() {
             const valoracion = valoraciones[index];
             suma += valoracion.valoracion;
         }
-        return suma/cantidad_valoraciones; 
+        // perdida de precision es despreciable dado que la funcion
+        // "toPrecision" redondea a la alza lo que es compatible con la ER
+        // R3.2: "y de máximo 1  decimal (se debe redondear al alza)"
+        return parseFloat((suma/cantidad_valoraciones).toPrecision(2)); 
     } 
 
     // Implementacion de requisito funcional: R3.7
@@ -61,7 +64,9 @@ function ListadoRecetasPopulares() {
         const calificacion = new Calificacion(0, 0, 0);
         calificacion.idReceta = id_receta;
         calificacion.cantidadValoraciones = contarValoraciones(valoraciones);
-        calificacion.promedioValoracion = (calificacion.cantidad_valoraciones >= 1) ? promedioValoracion(valoraciones) : 0;
+        calificacion.promedioValoracion = (calificacion.cantidadValoraciones >= 1) 
+            ? promedioValoracion(valoraciones, calificacion.cantidadValoraciones) 
+            : 0;
         return calificacion;
     }
 
