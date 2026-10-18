@@ -14,7 +14,7 @@ const BuscadorRecetas = () => {
         setMensaje('');
         setResultados([]);
 
-        const url = new URL('http://localhost:8000/api/recetas/buscar/');
+        const url = new URL('http://localhost:8000/api/receta/buscar/');
         if (nombre) url.searchParams.append('nombre_receta', nombre);
         if (categoria) url.searchParams.append('categoria', categoria);
         if (regimen) url.searchParams.append('regimen_alimenticio', regimen);
