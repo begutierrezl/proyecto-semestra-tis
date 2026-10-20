@@ -25,7 +25,7 @@ def validar_tamano_imagen(archivo):
 # Funcion 4: Ajuste de ingredientes segun cantidad de personas (R4)
 # No requiere tabla nueva: CANTIDAD_AJUSTADA es un dato calculado (R4.5)
 # Dependencia de funcion 1 (ingresar receta): modelos Receta e IngredienteReceta
-# Advertencia: nombres de clase/campos pueden estar sujetos a cambio
+
 # ----------------------------------------------------------------------
 
 # R4.4 a R4.7: recupera ingredientes de la receta y arma la salida

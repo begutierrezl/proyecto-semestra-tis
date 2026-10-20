@@ -7,6 +7,7 @@ import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/ProtectedRoute"
 import BuscadorRecetas from "./pages/BuscadorRecetas"
 import ListadoRecetaPopulares from "./pages/ListadoRecetasPopulares"
+import AjusteIngredientes from "./components/AjusteIngredientes" // Funcion 4: ajuste de ingredientes
 
 function Logout() {
   localStorage.clear()
@@ -27,6 +28,8 @@ function App() {
         <Route path="/logout" element={<Logout />} />
         <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="/buscar" element={<BuscadorRecetas />} />
+        <Route path="/ajuste" element={<AjusteIngredientes />} />
+        <Route path="/receta/:idReceta/ajuste" element={<AjusteIngredientes />} />
         <Route path="*" element={<NotFound />}></Route>
       </Routes>
     </BrowserRouter>
