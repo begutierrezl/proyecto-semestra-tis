@@ -12,7 +12,7 @@ function ListadoRecetasPopulares() {
     const recetas_id = useRef([]);
     const calificaciones = useRef([]);
     // Calificacion de una receta, por receta en 'recetas'
-    const listado_recetas_populares = useRef([]);
+    const recetas = useRef([]);
  
     // Implementacion de requisito 3.8.1
     const contarValoraciones = (valoraciones) => {
@@ -72,37 +72,31 @@ function ListadoRecetasPopulares() {
 
     // Implementacion de caso negativo del requisito 3.10: 
     // "..., De lo contrario, el sistema ingresara los campos ID_CALIFICACION, ID_RECETA, CANTIDAD_VALORACIONES, PROMEDIO_VALORACION; ..."
-    const createCalificacion = (id_receta, cantidad_valoraciones, promedio_valoracion) => {
-        api.post("api/calificacion/insert/", {id_receta, cantidad_valoraciones, promedio_valoracion})
+    const createCalificacion = (calificacion) => {
+        const receta = calificacion.idReceta;
+        const cantidad_valoraciones = calificacion.cantidadValoraciones;
+        const promedio_valoracion = calificacion.promedioValoracion;
+        api.post("api/calificacion/insert/", {receta, cantidad_valoraciones, promedio_valoracion})
         .then((respuesta) => {
-            const message = (respuesta.status === 201) ? "Calificacion creada" : "Error al crear calificacion";
+            const message = (respuesta.status == 201) ? "Calificacion creada" : "Error al crear calificacion";
             console.log(message);
         })
-        .catch((err) => alert(err))
+        .catch((err) => console.warn(err)) // re intentar operacion maximo 3 veces
     }
 
     // Implementacion de caso positivo del requisito 3.10:
     // "En caso de que R3.9 sea exitoso, el sistema actualizará los campos CANTIDAD_VALORACIONES, PROMEDIO_VALORACION, ..."
-    const updateCalificacion = (id_receta, cantidad_valoraciones, promedio_valoracion) => {
-        let sonDiferentes = false
-        getCalificacionReceta(id_receta)
-        .then((calificacion) => { if (
-            !(calificacion.cantidad_valoraciones === cantidad_valoraciones)
-            || !(calificacion.promedio_valoracion === promedio_valoracion)
-        ) sonDiferentes = true; 
-        });
-        if (!sonDiferentes) { 
-            console.log("Nada que actualizar, valores no son diferentes"); 
-            return false; 
-        } else {
-            api.put(`/api/calificacion/update/from_receta/${id_receta}/`, { cantidad_valoraciones, promedio_valoracion})
-            .then(response => {
-                const message = (response.status === 201) ? "Calificacion actualizada" : "Califiacion no pudo ser actualizada";
-                console.log(message);
-            })
-            .catch(err => alert(err));
-            return true;    
-        }
+    const updateCalificacion = (calificacion) => {
+        const receta = calificacion.idReceta;
+        const cantidad_valoraciones = calificacion.cantidadValoraciones;
+        const promedio_valoracion = calificacion.promedioValoracion;
+        api.put(`/api/calificacion/update/from_receta/${receta}/`, { cantidad_valoraciones, promedio_valoracion})
+        .then(response => {
+            const message = (response.status == 201) ? `Calificacion ${receta} actualizada` : `Califiacion ${receta} no pudo ser actualizada`;
+            console.log(message);
+        })
+        .catch(err => console.warn(err)); // re intentar operacion maximo 3 veces
+        return true;   
     }
 
     const updateCalificaciones = () => {
@@ -110,6 +104,7 @@ function ListadoRecetasPopulares() {
         getRecetas()
         .then(data => { for (let index = 0; index < data.length; index++) {
             const receta = data[index];
+            let is_calificacion_creada = false
             // Validacion no especificada adicional para evitar duplicacion de datos
             if (receta.id in recetas_id.current) continue;
             recetas_id.current.push(receta.id);
@@ -117,17 +112,45 @@ function ListadoRecetasPopulares() {
             getValoracionesDeReceta(receta.id)
             .then(data => {
                 // Validacion exigida por el requisito 3.8.2, cantidad_valoraciones >= 1
-                // donde cantidad_valoraciones = data.length en este caso
-                if (!(data.length === 0))
-                    calificaciones.current.push(calculateDatosCalificacion(data, receta.id));
-                else 
+                // donde cantidad_valoraciones = data.length en este caso                
+                if (!(data.length == 0)) {
+                    const calificacion = calculateDatosCalificacion(data, receta.id)
+                    calificaciones.current.push(calificacion);
+                    recetas.current.push(receta);
+                    return calificacion;
+                }    
+                else {
                     console.log(`No existen valoraciones para la receta de id:${receta.id}`);
+                    return null;
+                }
             })
-            .catch(err => {
-                alert(err);
+            .then(new_calificacion => {
+                // Recupera la calificacion de la receta de id: ID_RECETA
+                // sí esta existe, la actualiza de ser necesario
+                // de no existir, la ingresa en la base de datos
+                if (new_calificacion === null) return;
+                getCalificacionReceta(receta.id)
+                .then(calificacion => {
+                    // compara las calificaciones
+                    console.log(new_calificacion);
+                    console.log(calificacion);
+                    if (!(calificacion.cantidad_valoraciones == new_calificacion.cantidadValoraciones) || !(calificacion.promedio_valoracion == new_calificacion.promedioValoracion)) {
+                        // actualizar calificacion
+                        console.log(`Actualizando receta. Id: ${receta.id}, esperando respuesta del servidor...`);
+                        updateCalificacion(new_calificacion);
+                    }
+                })
+                .catch(err => {
+                    // crear calificacion
+                    console.log(new_calificacion);
+                    console.warn(err+". No existe calificacion registrada en la base de datos de la receta de id: "+receta.id_receta);
+                    createCalificacion(new_calificacion)
+                });
+            })
+            .catch(() => {
+                console.log(`No existe la receta de id:${receta.id}`);
             });
         }});
-        console.log(calificaciones.current);
     }
 
     // Implementacion de requisito funcional R3.9
@@ -153,7 +176,7 @@ function ListadoRecetasPopulares() {
         if (
             !(calificacion.idReceta === 0) && // El ID_RECETA es un ID valido
             (calificacion.cantidadValoraciones > 0) && // CANTIDAD_VALORACIONES 
-            (calificacion.promedioValoracion >= 1 && calificacion.promedioValoracion) // PROMEDIO_VALORACION
+            (calificacion.promedioValoracion >= 1 && calificacion.promedioValoracion <= 5) // PROMEDIO_VALORACION
         ) return true;
         return false;
     }

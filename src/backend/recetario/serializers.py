@@ -129,11 +129,6 @@ class CalificacionRecetaUpdateSerializer(serializers.ModelSerializer):
         fields = ["promedio_valoracion", "cantidad_valoraciones"]
         read_only_fields = ["id", "receta",]
 
-    def update(self, instance, validated_data):
-        instance = CalificacionReceta(**validated_data)
-        instance.save()
-        return instance
-
 # ----------------------------------------------------------------------
 # Funcion 4: Ajuste de ingredientes segun cantidad de personas (R4)
 # ----------------------------------------------------------------------
