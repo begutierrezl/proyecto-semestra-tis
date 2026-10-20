@@ -169,13 +169,14 @@ function ListadoRecetasPopulares() {
 
     // Se ejectua al cargar la pagina
     useEffect(() => {
-        updateCalificaciones();
+        // updateCalificaciones();
     }, [])
 
     return (
         <div>
             <div>
                 <h1>Lista de recetas populares</h1>
+                <h2>Hola mundo</h2>
             </div>
         </div>
     );
