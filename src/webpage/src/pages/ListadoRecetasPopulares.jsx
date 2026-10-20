@@ -1,5 +1,10 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import api from "../api";
+import LoadingIndicator from "../components/LoadingIndicator";
+import RecetaCard from "../components/RecetaCalificacion";
+import '../styles/ListadoRecetasPopulares.css';
+
+
 
 class Receta {
     constructor() {
@@ -18,7 +23,7 @@ class Receta {
         this.idReceta = receta.id;
         this.nombreReceta = receta.nombre_receta;
         this.descripcionCorta = receta.descripcion_corta;
-        this.ingredientes = receta.ingredientes;
+        this.ingredientes = receta.ingrediente_receta;
         //this.imagenReferencial = receta.imagen_referencial;
         this.cantidadPersonas = receta.cantidad_personas;
         this.categoria = receta.categoria;
@@ -56,6 +61,8 @@ class CalificacionReceta {
 function ListadoRecetasPopulares() {
 
     const [recetasPopulares, setRecetasPopulares] = useState([]);
+    const [cargando, setCargando] = useState(true);
+    const [error, setError] = useState(null);
  
     // Implementacion de requisito 3.8.1
     const contarValoraciones = (valoraciones) => {
@@ -71,11 +78,9 @@ function ListadoRecetasPopulares() {
             suma += valoracion.valoracion;
         }
         // perdida de precision es despreciable dado que la funcion
-        // "toPrecision" redondea a la alza lo que es compatible con la ER
+        // redondea a la alza lo que es compatible con la ER
         // R3.2: "y de máximo 1  decimal (se debe redondear al alza)"
-        return parseFloat(
-            (Math.ceil((suma/cantidad_valoraciones)*10)/10)
-            .toPrecision(2)); 
+        return parseFloat(Math.ceil((suma * 10) / cantidad_valoraciones) / 10); 
     } 
 
     // Implementacion de requisito funcional: R3.7
@@ -121,7 +126,7 @@ function ListadoRecetasPopulares() {
         const receta = calificacion.idReceta;
         const cantidad_valoraciones = calificacion.cantidadValoraciones;
         const promedio_valoracion = calificacion.promedioValoracion;
-        api.post("api/calificacion/insert/", {receta, cantidad_valoraciones, promedio_valoracion})
+        api.post("/api/calificacion/insert/", {receta, cantidad_valoraciones, promedio_valoracion})
         .then((respuesta) => {
             const message = (respuesta.status == 201) ? "Calificacion creada" : "Error al crear calificacion";
             console.log(message);
@@ -174,47 +179,82 @@ function ListadoRecetasPopulares() {
                         // sí esta existe, la actualiza de ser necesario
                         updateCalificacion(calificacion);
                     }
-                } catch (err) {
-                    // de no existir, la ingresa en la base de datos
-                    if (err.response?.status === 404) createCalificacion(calificacion);
-                    // cualquier otro error (conexion o bad request) se advierte
-                    else console.warn(err);
-                }
-        }));
-        return resultado;
-    }
+            } catch (err) {
+                // de no existir, la ingresa en la base de datos
+                if (err.response?.status === 404) createCalificacion(calificacion);
+                // cualquier otro error (conexion o bad request) se advierte
+                else console.warn(err);
+            }
+            }));
+            return resultado;
+        }
 
     // Implementacion de requisito funcional R3.13
     const ordenarRecetasCalificadas = (lista) => {
         return lista
-            // orden por promedio valoracion
-            .toSorted((a, b) => b.promedioValoracion - a.promedioValoracion)
+            // No es necesario comprobar nuevamente la cantidad de valoraciones la funcion updateCalificaciones 
+            // realiza una comprobacion de las valoraciones recuperadas por lo que la operacion es implicita
+            .toSorted((a, b) => 
+                b.promedioValoracion - a.promedioValoracion || // orden por promedio valoracion
+                a.nombreReceta.localeCompare(b.nombreReceta, "es") // caso empate: ordena por nombre
+            )
             // obtiene las 10 recetas mejor rankeadas
             .slice(0, 10)
-            // caso empate: ordena por nombre
-            .sort((a, b) => (a.nombreReceta < b.nombreReceta ? 1 : a.nombreReceta > b.nombreReceta ? -1 : 0));
     };
 
-    const getListadoRecetasPopulares = () => {
-        
-    };
-
-    // Actua como la funcon getListadoRecetasPopulares
+    // Actua como la funcion getListadoRecetasPopulares
     // por exigencias de React, esta funcion debe ser implementada de forma implicita
     useEffect(() => {
         const cargar = async () => {
-            const lista = await updateCalificaciones();
-            setRecetasPopulares(ordenarRecetasCalificadas(lista));
+            try {
+                const lista = await updateCalificaciones();
+                setRecetasPopulares(ordenarRecetasCalificadas(lista));
+            } catch (err) {
+                const status = err.response?.status;                
+                setError(status === 401 || status === 403 ? "auth" : "red");
+                console.warn(err)
+            } finally {
+                setCargando(false);
+            }
         };
         cargar();
     }, [])
+    
+        if (cargando) {
+        return (
+            <div className="recetas-populares">
+                <p className="recetas-populares__mensaje">Cargando recetas populares...</p>
+                <LoadingIndicator />
+            </div>
+        );
+    }
 
+    if (error === "auth") {
+        return <p className="recetas-populares__mensaje recetas-populares__mensaje--error">Debe iniciar sesión para ver las recetas populares.</p>;
+    }
+    if (error === "red") {
+        return <p className="recetas-populares__mensaje recetas-populares__mensaje--error">No se pudo cargar el listado. Intente nuevamente.</p>;
+    }
+
+    // R3.14
+    if (recetasPopulares.length === 0) {
+        return (
+            <div className="recetas-populares">
+                <h1 className="recetas-populares__titulo">Lista de recetas populares</h1>
+                <p className="recetas-populares__mensaje">
+                    Aún no hay recetas valoradas. Sea el primero en calificar una receta
+                </p>
+            </div>
+        );
+    }
+
+    // R3.13
     return (
-        <div>
-            <div>
-                <h1>Lista de recetas populares</h1>
-                {recetasPopulares.map(r => (
-                    <li key={r.idReceta}>{r.nombreReceta} ({r.promedioValoracion})</li>
+        <div className="recetas-populares">
+            <h1 className="recetas-populares__titulo">Lista de recetas populares</h1>
+            <div className="recetas-populares__lista">
+                {recetasPopulares.map((receta) => (
+                    <RecetaCard key={receta.idReceta} receta={receta} />
                 ))}
             </div>
         </div>
