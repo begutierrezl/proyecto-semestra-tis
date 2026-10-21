@@ -136,12 +136,13 @@ class Receta(models.Model):
         ],
     )
 
-    # R1.7: revisar docker
-    """imagen_referencial = models.ImageField(
+    # R1.7: 
+    imagen_referencial = models.ImageField(
         upload_to="recetas/",
         validators=[FileExtensionValidator(["jpg", "png"]),
                     validar_tamano_imagen],
-    )""" 
+        default="c.jpg",
+    ) 
 
     # R1.8
     cantidad_personas = models.PositiveIntegerField(

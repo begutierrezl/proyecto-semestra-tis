@@ -23,6 +23,8 @@ from recetario.views import CreateCalificacionView, RetrieveUpdateCalificacionFr
 from recetario.views import AjusteIngredientesView
 from recetario.views import buscar_recetas
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -48,3 +50,6 @@ urlpatterns = [
     # Funcion 5
     path("api/receta/buscar/", buscar_recetas, name="buscar_recetas"),
 ]
+# Imagenes    
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
