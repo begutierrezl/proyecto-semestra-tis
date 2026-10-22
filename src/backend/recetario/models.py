@@ -25,7 +25,7 @@ def validar_tamano_imagen(archivo):
 # Funcion 4: Ajuste de ingredientes segun cantidad de personas (R4)
 # No requiere tabla nueva: CANTIDAD_AJUSTADA es un dato calculado (R4.5)
 # Dependencia de funcion 1 (ingresar receta): modelos Receta e IngredienteReceta
-# Advertencia: nombres de clase/campos pueden estar sujetos a cambio
+
 # ----------------------------------------------------------------------
 
 # R4.4 a R4.7: recupera ingredientes de la receta y arma la salida
@@ -136,12 +136,13 @@ class Receta(models.Model):
         ],
     )
 
-    # R1.7: revisar docker
-    """imagen_referencial = models.ImageField(
+    # R1.7: 
+    imagen_referencial = models.ImageField(
         upload_to="recetas/",
         validators=[FileExtensionValidator(["jpg", "png"]),
                     validar_tamano_imagen],
-    )""" 
+        default="c.jpg",
+    ) 
 
     # R1.8
     cantidad_personas = models.PositiveIntegerField(
@@ -175,7 +176,8 @@ class Receta(models.Model):
     #para printear nombre receta
     def __str__(self):
         return self.nombre_receta
-    # Funcion 1: Modelo de ingredientes que ingresan con la receta
+    
+# Funcion 1: Modelo de ingredientes que ingresan con la receta
 class Ingrediente(models.Model):
     receta = models.ForeignKey(
         Receta, on_delete=models.CASCADE, related_name="ingrediente_receta")
@@ -243,9 +245,6 @@ class Valoracion(models.Model):
             verbose_name="Valoración"
         )
 
-
-
-
 # Funcion 3
 # referencias:
 # https://docs.djangoproject.com/en/6.1/ref/models/instances/
@@ -255,6 +254,7 @@ class Valoracion(models.Model):
 
 class CalificacionReceta(models.Model): 
     # Campo ID_CALIFICACION especificado en R3.1 es implementado de forma implicita por Django AutoFields
+    id = models.BigAutoField(primary_key=True)
 
     # Campo ID_RECETA especificado en R1.1
     # - Implementado con una relacion floja absoluta (lazy absolute relationship) 
@@ -266,17 +266,18 @@ class CalificacionReceta(models.Model):
         Receta,
         on_delete=models.CASCADE,
         primary_key=False,
-        related_name="receta"
+        related_name="calificacion_receta"
     )
 
     # Campo PROMEDIO_VALORACION especificado en R3.2
-    promedio_valoracion = models.FloatField(
+    promedio_valoracion = models.DecimalField(
         blank=True, 
-        db_default=1, 
+        db_default=Decimal(1), 
+        max_digits=2,
+        decimal_places=1,
         validators=[
             MaxValueValidator(5),
             MinValueValidator(1),
-            DecimalValidator(max_digits=None, decimal_places=1),
         ], 
         db_comment="En escala de Likert, >=1 y <=5"
     )
@@ -292,8 +293,3 @@ class CalificacionReceta(models.Model):
 
     def __str__(self):
         return str(f"prom: {self.promedio_valoracion}, cant: {self.cantidad_valoraciones}")
-
-    def save(self, **kwargs):
-        if "promedio_valoracion" in kwargs:
-            print(kwargs["promedio_valoraciones"])
-        return super().save(**kwargs)

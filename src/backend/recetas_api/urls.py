@@ -21,20 +21,23 @@ from recetario.views import ListRecetasView, CreateRecetaView, RetrieveRecetaIdV
 from recetario.views import RetrieveValoracionView, RegistrarValoracionView, ActualizarValoracionView
 from recetario.views import CreateCalificacionView, RetrieveUpdateCalificacionFromIdView, RetrieveUpdateCalifiacionFromRecetaView
 from recetario.views import AjusteIngredientesView
+from recetario.views import buscar_recetas
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
-
+from django.conf import settings
+from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path("api/user/register/", CreateUserView.as_view(), name="register"),
     path("api/token/", TokenObtainPairView.as_view(), name="get_token"),
-    path("api/receta/insert/", CreateRecetaView.as_view(), name="create_receta"), #Funcion 1: Ingreso de Recetas
-    path("api/receta/", ListRecetasView.as_view(), name="get_recetas"), # Listar todas las recetas
-    path("api/receta/<int:id>",RetrieveRecetaIdView.as_view(), name="get_receta"), # Listar receta con id
     path("api/token/refresh/", TokenRefreshView.as_view(), name="refresh"),
     path("api-auth/", include("rest_framework.urls")),
+    # Receta
+    path("api/receta/insert/", CreateRecetaView.as_view(), name="create_receta"), #Funcion 1: Ingreso de Recetas
+    path("api/receta/", ListRecetasView.as_view(), name="get_recetas"), # Listar todas las recetas
+    path("api/receta/<int:id>",RetrieveRecetaIdView.as_view(), name="get_receta"), # Listar receta con id    
     # Valoracion
-    path("api/valoracion/<int:receta_id>/", RetrieveValoracionView.as_view(), name="get_valoracion"),
+    path("api/valoracion/<int:receta_id>/", RetrieveValoracionView.as_view(), name="get_valoracion_receta"),
     path("api/valoracion/registrar/", RegistrarValoracionView.as_view(), name="registrar_valoracion"),
     path("api/valoracion/actualizar/", ActualizarValoracionView.as_view(), name="actualizar_valoracion"),
     # Calificacion
@@ -44,5 +47,9 @@ urlpatterns = [
     path("api/calificacion/update/from_receta/<int:receta_id>/", RetrieveUpdateCalifiacionFromRecetaView.as_view(), name="update_calificacion"),
     # Funcion 4: Ajuste de ingredientes segun cantidad de personas
     path("api/get/receta/<int:id_receta>/ajuste/", AjusteIngredientesView.as_view(), name="ajuste_ingredientes"),
-    
+    # Funcion 5
+    path("api/receta/buscar/", buscar_recetas, name="buscar_recetas"),
 ]
+# Imagenes    
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)

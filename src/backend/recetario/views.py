@@ -2,6 +2,9 @@ from django.shortcuts import render
 from django.apps import apps
 from django.contrib.auth.models import User
 from django.core.exceptions import ObjectDoesNotExist
+from django.http import JsonResponse
+from django.views.decorators.http import require_GET
+from .models import Receta
 from rest_framework import generics, status
 from rest_framework.exceptions import NotFound
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -23,12 +26,16 @@ from rest_framework.views import APIView
 
 # Create your views here.
 
+# Complemento de funcion 2
 class CreateUserView(generics.CreateAPIView):
     queryset = User.objects.all()
     serializer_class = UserSerializer
     permission_classes = [AllowAny]
 
-#Ingreso receta Funcion R1: Ingreso de Recetas
+# ======================================================================
+# Función 1: Ingreso de recetas (R1)
+# ======================================================================
+
 #ingreso de receta
 class CreateRecetaView(generics.CreateAPIView):
     queryset= Receta.objects.all()
@@ -48,92 +55,8 @@ class RetrieveRecetaIdView(generics.RetrieveAPIView):
     permission_classes = [AllowAny]
     lookup_field="id"
 
-# Dependencia de funcion 2 valoracion recetas -> Definicion de modelo Valoracion
-def get_id_from_path(path: str) -> int:
-    path_splited = path.split("/")
-    for string in path_splited: 
-        if string.isdecimal(): return str(string)
-    return -1
-
-class RetrieveValoracionView(generics.ListAPIView):
-    serializer_class = ValoracionSerializer
-    permission_classes = [AllowAny]
-    lookup_field = "receta_id"
-
-    def get_queryset(self):
-        id_receta: int = get_id_from_path(self.request.path)
-        if (id_receta == -1):
-            raise Exception("No se especifico un ID en el path")
-        receta = Receta.objects.get(id=id_receta)
-        return Valoracion.objects.filter(receta=receta)
-
-# ----------------------------------------------------------------------
-# Funcion 3:
-# ----------------------------------------------------------------------
-# referencias 
-# https://www.django-rest-framework.org/api-guide/generic-views/#concrete-view-classes
-
-# Crear una calificacion de una receta, caso R3.9 no se cumple requisito
-# "El sistema (API) verificará la existencia de una calificación asociada a una receta"
-# La calificacion no existe -> debe ser creada
-class CreateCalificacionView(generics.CreateAPIView):
-    queryset = CalificacionReceta.objects.all()
-    serializer_class = CalificacionRecetaCreateSerializer
-    permission_classes = [AllowAny] # obs1: Sin un requisito de seguridad concreto, maxima validacion 
-                                    #       de autenticacion debiese ser el dueño de una receta
-
-# Actualizar los campos de una calificacion de una receta, caso R3.9 se cumple requisito
-# "En caso de que R3.9 sea exitoso, el sistema (API) actualizará los campos CANTIDAD_VALORACIONES, PROMEDIO_VALORACION"
-# La calificacion existe y tiene una receta asociada -> debe ser actualizada
-class RetrieveUpdateCalificacionFromIdView(generics.RetrieveUpdateAPIView):
-    # se necesita recuperar el ID_RECETA de la URL para poder realizar la asociacion en la BD
-    queryset = CalificacionReceta.objects.all()
-    serializer_class = CalificacionRecetaUpdateSerializer
-    permission_classes = [AllowAny] # obs1: ...
-    lookup_field = "id"
-
-# Recuperar califiaciones, caso R3.9 y R3.11
-# R3.11: Validacion "CANTIDAD_VALORACIONES sea mayor o igual a uno (≥1)" debe ser realizada del lado
-#        del usuario [citar end_point en Pagina Web]
-# R3.14: Validacion "... no se encuentra ninguna receta con al menos una calificación, ..." debe ser
-#        realizada del lado del usuario [citar end_point en Pagina Web]
-class RetrieveUpdateCalifiacionFromRecetaView(generics.RetrieveUpdateAPIView):
-    queryset = CalificacionReceta.objects.all()
-    serializer_class = CalificacionRecetaUpdateSerializer
-    permission_classes = [AllowAny]
-    lookup_field = "receta_id"
-    
-# ----------------------------------------------------------------------
-# Funcion 4: Ajuste de ingredientes segun cantidad de personas (R4)
-# GET api/get/receta/<id_receta>/ajuste/?cantidad_personas_deseada=N
-# ----------------------------------------------------------------------
-# Dependencia de funcion 1 ingresar receta -> Definicion de modelo Receta
-# (se obtiene de forma perezosa para no depender del orden de implementacion)
-class AjusteIngredientesView(generics.RetrieveAPIView):
-    serializer_class = RecetaAjustadaSerializer
-    permission_classes = [AllowAny]  # obs1: sin un requisito de seguridad concreto
-
-    def get_queryset(self):
-        return apps.get_model("recetario", "Receta").objects.all()
-
-    def retrieve(self, request, *args, **kwargs):
-        # R4.1 y R4.2: validacion de CANTIDAD_PERSONAS_DESEADA
-        parametros = ParametrosAjusteSerializer(data=request.query_params)
-        parametros.is_valid(raise_exception=True)
-        cantidad_deseada = parametros.validated_data["cantidad_personas_deseada"]
-
-        # R4.3: verificar existencia del ID_RECETA
-        try:
-            receta = self.get_queryset().get(pk=kwargs["id_receta"])
-        except ObjectDoesNotExist:
-            raise NotFound("Receta no encontrada. No es posible realizar el ajuste")
-
-        # R4.4 a R4.7: recuperar datos, calcular y armar la salida
-        datos = generar_receta_ajustada(receta, cantidad_deseada)
-        serializer = self.get_serializer(datos)
-        return Response(serializer.data)
-
-
+# ======================================================================
+# Función 2: Valoración de Recetas (R2) — VISTA 2: REGISTRAR
 # ======================================================================
 class RegistrarValoracionView(APIView):
 
@@ -207,6 +130,7 @@ class RegistrarValoracionView(APIView):
             },
             status=status.HTTP_201_CREATED
         )
+
 # ======================================================================
 # Función 2: Valoración de Recetas (R2) — VISTA 2: ACTUALIZAR
 # ======================================================================
@@ -283,4 +207,124 @@ class ActualizarValoracionView(APIView):
 
             status=status.HTTP_200_OK
         )
+
+
+
+# ----------------------------------------------------------------------
+# Funcion 3:
+# ----------------------------------------------------------------------
+# referencias 
+# https://www.django-rest-framework.org/api-guide/generic-views/#concrete-view-classes
+
+# Dependencia de funcion 2 valoracion recetas -> Definicion de modelo Valoracion
+# Recupera el listado de valoraciones asociado a una Receta
+def get_id_from_path(path: str) -> int:
+    path_splited = path.split("/")
+    for string in path_splited: 
+        if string.isdecimal(): return str(string)
+    return -1
+
+class RetrieveValoracionView(generics.ListAPIView):
+    serializer_class = ValoracionSerializer
+    permission_classes = [AllowAny]
+    lookup_field = "receta_id"
+
+    def get_queryset(self):
+        id_receta: int = get_id_from_path(self.request.path)
+        if (id_receta == -1):
+            raise Exception("No se especifico un ID en el path")
+        receta = Receta.objects.get(id=id_receta)
+        return Valoracion.objects.filter(receta=receta)
+
+# Crear una calificacion de una receta, caso R3.9 no se cumple requisito
+# "El sistema (API) verificará la existencia de una calificación asociada a una receta"
+# La calificacion no existe -> debe ser creada
+class CreateCalificacionView(generics.CreateAPIView):
+    queryset = CalificacionReceta.objects.all()
+    serializer_class = CalificacionRecetaCreateSerializer
+    permission_classes = [AllowAny] # obs1: Sin un requisito de seguridad concreto, maxima validacion 
+                                    #       de autenticacion debiese ser el dueño de una receta
+
+# Actualizar los campos de una calificacion de una receta, caso R3.9 se cumple requisito
+# "En caso de que R3.9 sea exitoso, el sistema (API) actualizará los campos CANTIDAD_VALORACIONES, PROMEDIO_VALORACION"
+# La calificacion existe y tiene una receta asociada -> debe ser actualizada
+class RetrieveUpdateCalificacionFromIdView(generics.RetrieveUpdateAPIView):
+    # se necesita recuperar el ID_RECETA de la URL para poder realizar la asociacion en la BD
+    queryset = CalificacionReceta.objects.all()
+    serializer_class = CalificacionRecetaUpdateSerializer
+    permission_classes = [AllowAny] # obs1: ...
+    lookup_field = "id"
+
+# Recuperar califiaciones, caso R3.9 y R3.11
+# R3.11: Validacion "CANTIDAD_VALORACIONES sea mayor o igual a uno (≥1)" debe ser realizada del lado
+#        del usuario [citar end_point en Pagina Web]
+# R3.14: Validacion "... no se encuentra ninguna receta con al menos una calificación, ..." debe ser
+#        realizada del lado del usuario [citar end_point en Pagina Web]
+class RetrieveUpdateCalifiacionFromRecetaView(generics.RetrieveUpdateAPIView):
+    queryset = CalificacionReceta.objects.all()
+    serializer_class = CalificacionRecetaUpdateSerializer
+    permission_classes = [AllowAny]
+    lookup_field = "receta_id"
+    
+# ----------------------------------------------------------------------
+# Funcion 4: Ajuste de ingredientes segun cantidad de personas (R4)
+# GET api/get/receta/<id_receta>/ajuste/?cantidad_personas_deseada=N
+# ----------------------------------------------------------------------
+# Dependencia de funcion 1 ingresar receta -> Definicion de modelo Receta
+# (se obtiene de forma perezosa para no depender del orden de implementacion)
+class AjusteIngredientesView(generics.RetrieveAPIView):
+    serializer_class = RecetaAjustadaSerializer
+    permission_classes = [AllowAny]  # obs1: sin un requisito de seguridad concreto
+
+    def get_queryset(self):
+        return apps.get_model("recetario", "Receta").objects.all()
+
+    def retrieve(self, request, *args, **kwargs):
+        # R4.1 y R4.2: validacion de CANTIDAD_PERSONAS_DESEADA
+        parametros = ParametrosAjusteSerializer(data=request.query_params)
+        parametros.is_valid(raise_exception=True)
+        cantidad_deseada = parametros.validated_data["cantidad_personas_deseada"]
+
+        # R4.3: verificar existencia del ID_RECETA
+        try:
+            receta = self.get_queryset().get(pk=kwargs["id_receta"])
+        except ObjectDoesNotExist:
+            raise NotFound("Receta no encontrada. No es posible realizar el ajuste")
+
+        # R4.4 a R4.7: recuperar datos, calcular y armar la salida
+        datos = generar_receta_ajustada(receta, cantidad_deseada)
+        serializer = self.get_serializer(datos)
+        return Response(serializer.data)
+     
+# ----------------------------------------------------------------------
+# Funcion 4: busqueda de recetas (R5)
+# ----------------------------------------------------------------------
+@require_GET
+def buscar_recetas(request):
+    nombre = request.GET.get('nombre_receta', '').strip()
+    categoria = request.GET.get('categoria', '').strip()
+    regimen = request.GET.get('regimen_alimenticio', '').strip()
+
+    if not nombre and not categoria and not regimen:
+        return JsonResponse({"error": "Debe ingresar al menos un criterio de búsqueda para continuar"}, status=400)
+
+    resultados = Receta.objects.all()
+
+    if nombre:
+        resultados = resultados.filter(nombre_receta__icontains=nombre)
+
+    if categoria:
+        resultados = resultados.filter(categoria=categoria.upper())
+    
+    if regimen:
+        resultados = resultados.filter(regimen_alimenticio=regimen.upper())
+    
+    if not resultados.exists():
+        return JsonResponse({"mensaje": "No se encontraron recetas que coincidan con los criterios de búsqueda ingresados"}, status=404)
+
+    resultados = resultados.order_by('nombre_receta')
+
+    lista_resultados = list(resultados.values('id', 'nombre_receta', 'categoria', 'regimen_alimenticio', 'descripcion_corta', 'enlace_receta'))
+
+    return JsonResponse({"resultados": lista_resultados})
 
