@@ -6,7 +6,7 @@ import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/ProtectedRoute"
 import ListadoRecetaPopulares from "./components/ListadoRecetasPopulares"
-import { Valoracion } from './pages/valoracion'
+import FormularioValoracion from "./pages/valoracion"
 function Logout() {
   localStorage.clear()
   return <Navigate to="/login" />
