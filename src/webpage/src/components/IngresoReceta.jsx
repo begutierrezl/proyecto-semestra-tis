@@ -1,21 +1,63 @@
 import { useState } from "react"
+import Ingrediente from "./IngresoIngrediente";
 import api from "../api"
 function IngresoReceta() {
     //estados de valores
     const [nombre_receta, setNombreReceta] = useState('');
     const [descripcion_corta, setDescripcionCorta] = useState('');
-    const [imagen_referencial, setImagenRefencial] = useState('');
+    const [imagen_referencial, setImagenReferencial] = useState('');
     const [cantidad_personas, setCantidadPersonas] = useState('');
     const [categoria, setCategoria] = useState('');
     const [regimen_alimenticio,setRegimenAlimenticio] = useState('');
     const [instrucciones_preparacion,setInstruccionesPreparacion] = useState('');
+    const [ingrediente_receta, setIngredienteReceta]= useState([]);
     const [mensaje,SetMensaje]= useState('');//para mensajes de error
+    
+    //funcion para ingrediente vacio
+    const crearIngredienteNuevo = () =>(
+        {
+            nombre_ingrediente :"", cantidad_ingrediente:"",unidad_medida:"GRAMOS"
+        }
+    )
+    const addIngrediente = (e) =>{
+        //concadena ingrediente vacio
+        setIngredienteReceta(ingrediente_receta.concat(crearIngredienteNuevo()));
+        
+
+    }
+    const quitarIngrediente = (i) =>{
+
+        //elimina ingrediente i
+        setIngredienteReceta(
+            //devuelve lista que tiene todo menos elemnto i
+            ingrediente_receta.filter((ing,index)=> index != i)
+        )
+    }
+    const cambiarIngrediente = (i, campo, valor) => {
+        const copia= [...ingrediente_receta];
+        copia[i] = {...copia[i], [campo]: valor};//cambia valor de campo de ingrediente i
+        setIngredienteReceta(copia);
+    };
+    //itera por la lista de ingredientes que hay para mostrar en la pagina
+    const iterableIngredientes = ingrediente_receta.map((ingrediente,i)=> (
+        <div key={i}>
+            <Ingrediente
+                //le pasa los prop necesarios
+                ingrediente={ingrediente}
+                //se los pasa como flecha para saber cual ingrediente y campo cambia
+                onChange={(campo, valor) => cambiarIngrediente(i, campo, valor)}
+                //flecha para que corra con boton
+                eliminarIng={() => quitarIngrediente(i)}
+            />
+        </div>
+    ))
+
     const handleSubmit =async (e) =>{
         const url="http://localhost:8000/api/receta/insert/" //Para desarrollo
         e.preventDefault(); //para que no se pierda al subir los datos
         const formData = new FormData(e.target);//le entregamos lo que sube el evento que es la form
         formData.set("nombre_receta",nombre_receta.toUpperCase())//Mayusculas R1.14
-        formData.append("ingrediente_receta", JSON.stringify([{ nombre_ingrediente: "Harina", cantidad_ingrediente: 500, unidad_medida: "GRAMOS"}]));
+        formData.append("ingrediente_receta", JSON.stringify(ingrediente_receta));//añadidos manualmente
         console.log(formData);
         try
         {
@@ -56,8 +98,7 @@ function IngresoReceta() {
                         type="file"
                         id="imagen_referencial"
                         name="imagen_referencial"
-                        value={imagen_referencial}
-                        onChange={(e)=>setImagenRefencial(e.target.files)}
+                        onChange={(e)=>setImagenReferencial(e.target.files)}
                         required
                         accept=".png,.jpg" />
                 </label>
@@ -109,6 +150,14 @@ function IngresoReceta() {
                         value={instrucciones_preparacion}
                         onChange={(e)=>setInstruccionesPreparacion(e.target.value)}
                         />
+
+                </label>
+                <label >
+                    Ingredientes:
+                    <button onClick={addIngrediente} type="button">+
+
+                    </button>
+                    {iterableIngredientes}
 
                 </label>
                 <button type="submit">
