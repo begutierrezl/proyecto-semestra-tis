@@ -1,63 +1,76 @@
 import { useState } from "react"
+import {useForm, useFieldArray} from "react-hook-form"
 import Ingrediente from "./IngresoIngrediente";
 import api from "../api"
+
+
+const MENSAJES = {
+    obligatorio: "no es un ingreso valido, este campo es obligatorio.",
+    minimo: (n) => `no es un ingreso valido, debe tener al menos ${n} caracteres (sin contar espacios).`,
+    maximo: (n) => `no es un ingreso valido, no puede superar los ${n} caracteres.`,
+    invalidos: (c) => `no es un ingreso valido, incluye caracteres no permitidos: ${c}`,
+    numero: "no es un ingreso valido, Campo debe ser un numero",
+    mayorACero: "no es un ingreso valido, debe ser mayor a cero.",
+    maxDecimales: "no es un ingreso valido, máximo 2 decimales.",
+    soloImagen: "no es un ingreso valido, solo se aceptan archivos JPG o PNG.",
+    imagenGrande: "no es un ingreso valido, la imagen no puede superar los 5 MB.",
+    rangoPersonas: "no es un ingreso valido, debe estar entre 1 y 100.",
+};
 function IngresoReceta() {
     //estados de valores
-    const [nombre_receta, setNombreReceta] = useState('');
-    const [descripcion_corta, setDescripcionCorta] = useState('');
-    const [imagen_referencial, setImagenReferencial] = useState('');
-    const [cantidad_personas, setCantidadPersonas] = useState('');
-    const [categoria, setCategoria] = useState('');
-    const [regimen_alimenticio,setRegimenAlimenticio] = useState('');
-    const [instrucciones_preparacion,setInstruccionesPreparacion] = useState('');
-    const [ingrediente_receta, setIngredienteReceta]= useState([]);
-    const [mensaje,SetMensaje]= useState('');//para mensajes de error
+    const {register,handleSubmit,formState: {errors},control} = useForm()
+    const { fields, append, remove } = useFieldArray({ control, name: "ingredientes", rules : {required: "Minimo un ingrediente"} });
     
-    //funcion para ingrediente vacio
-    const crearIngredienteNuevo = () =>(
+    const minimoSinEspacios= (dato,min)=>{
+        const sinEspacios=dato.replace(/ /g,"");
+        if(sinEspacios.length<min)
         {
-            nombre_ingrediente :"", cantidad_ingrediente:"",unidad_medida:"GRAMOS"
+            return false
+        }else{
+            return true
         }
-    )
-    const addIngrediente = (e) =>{
-        //concadena ingrediente vacio
-        setIngredienteReceta(ingrediente_receta.concat(crearIngredienteNuevo()));
+    }
+    const nombreUnico = (value) =>
+    {
+        return true
+    }
+    const incluyeInvalidos= (value,er) =>
+    {
+        const exreg= new RegExp(er,"g")
+        const invalidos = value.match(exreg) ?? []
+        return invalidos
         
-
     }
-    const quitarIngrediente = (i) =>{
-
-        //elimina ingrediente i
-        setIngredienteReceta(
-            //devuelve lista que tiene todo menos elemnto i
-            ingrediente_receta.filter((ing,index)=> index != i)
-        )
-    }
-    const cambiarIngrediente = (i, campo, valor) => {
-        const copia= [...ingrediente_receta];
-        copia[i] = {...copia[i], [campo]: valor};//cambia valor de campo de ingrediente i
-        setIngredienteReceta(copia);
-    };
     //itera por la lista de ingredientes que hay para mostrar en la pagina
-    const iterableIngredientes = ingrediente_receta.map((ingrediente,i)=> (
-        <div key={i}>
-            <Ingrediente
-                //le pasa los prop necesarios
-                ingrediente={ingrediente}
-                //se los pasa como flecha para saber cual ingrediente y campo cambia
-                onChange={(campo, valor) => cambiarIngrediente(i, campo, valor)}
-                //flecha para que corra con boton
-                eliminarIng={() => quitarIngrediente(i)}
-            />
-        </div>
-    ))
+    const iterableIngredientes = fields.map((ingrediente,i)=> (
+        
+    <Ingrediente
+        key={ingrediente.id}
+        i={i}
+        register={register}
+        errors={errors}
+        eliminarIng={() => remove(i)}
+        MENSAJES={MENSAJES}
+    />
+))
+    const crearIngredienteNuevo = () => ({
+        nombre_ingrediente: "", cantidad_ingrediente: "", unidad_medida: ""
+    });
 
-    const handleSubmit =async (e) =>{
+    const addIngrediente = () => append(crearIngredienteNuevo());
+
+
+    const subir =handleSubmit (async(datos) =>{
         const url="http://localhost:8000/api/receta/insert/" //Para desarrollo
-        e.preventDefault(); //para que no se pierda al subir los datos
-        const formData = new FormData(e.target);//le entregamos lo que sube el evento que es la form
-        formData.set("nombre_receta",nombre_receta.toUpperCase())//Mayusculas R1.14
-        formData.append("ingrediente_receta", JSON.stringify(ingrediente_receta));//añadidos manualmente
+        const formData = new FormData(datos.target);//le entregamos lo que sube el evento que es la form
+        formData.append("nombre_receta",datos.nombre_receta.toUpperCase())//Mayusculas R1.14
+        formData.append("descripcion_corta", datos.descripcion_corta);
+        formData.append("imagen_referencial", datos.imagen_referencial[0]);  // FileList -> archivo
+        formData.append("cantidad_personas", datos.cantidad_personas);
+        formData.append("categoria", datos.categoria);
+        formData.append("regimen_alimenticio", datos.regimen_alimenticio);
+        formData.append("instrucciones_preparacion", datos.instrucciones_preparacion);
+        formData.append("ingrediente_receta", JSON.stringify(datos.ingredientes));//añadidos manualmente
         console.log(formData);
         try
         {
@@ -65,59 +78,147 @@ function IngresoReceta() {
         }catch(error)
         {
         console.log(error.response);
-
         }
-    }
+        console.log(formData)
+    })
 
     return (
         <div>
-            <form onSubmit={handleSubmit}>
-                <label >
-                    Nombre de la Receta:
-                    <input
-                        type="text"
-                        id="nombre_receta"
-                        name="nombre_receta"
-                        value={nombre_receta}
-                        onChange={(e) => setNombreReceta(e.target.value)}
-                        required />
-                </label>
+            <form onSubmit={subir}>
+                <div>
+                    <label >
+                        Nombre de la Receta:
+                        <input
+                            type="text"
+                            id="nombre_receta"
+                            name="nombre_receta"
+                            {...register("nombre_receta", {
+                                required: {
+                                    value: true,
+                                    message: `El nombre de la receta ${MENSAJES.obligatorio}`
+                                },
+                                validate: (value) => {
+                                    if (!minimoSinEspacios(value, 3)) {
+                                        return `El nombre de la receta ${MENSAJES.minimo(3)}`
+                                    }
+                                    if (!nombreUnico(value)) {
+                                        return "Ya existe una receta con ese  nombre. Por favor, utilice un nombre diferente.";
+                                    }
+                                    const invalidos = incluyeInvalidos(value, "[^\\w\\sñÑáéíóúÁÉÍÓÚ]")
+                                    if (invalidos.length != 0)
+                                    {
+                                        return `El nombre de la receta ${MENSAJES.invalidos(invalidos)}`
+                                    }
+                            },
+                            maxLength: {
+                                value: 80,
+                                message: `El nombre de la receta ${MENSAJES.maximo(80)}`
+                            },
+                            }
+                            )
+                            }
+                        />
+                    </label>
+                    {errors.nombre_receta && <span>{errors.nombre_receta.message}</span>}
+                </div>
+                <div>
                 <label >
                     Descripcion:
                     <input
                         type="text"
                         id="descripcion_corta"
                         name="descripcion_corta"
-                        value={descripcion_corta}
-                        onChange={(e)=> setDescripcionCorta(e.target.value)}
-                        required />
+                        {...register("descripcion_corta", {
+                                required: {
+                                    value: true,
+                                    message: `La descripcion ${MENSAJES.obligatorio}`
+                                },
+                                validate: (value) => {
+                                    const min=10
+                                    if (!minimoSinEspacios(value, min)) {
+                                        return `La descripcion ${MENSAJES.minimo(min)}`
+                                    }
+                                    const invalidos = incluyeInvalidos(value, "[^\\w\\sñÑáéíóúÁÉÍÓÚ.,:;°]")
+                                    if (invalidos.length != 0)
+                                    {
+                                        return `La descripcion ${MENSAJES.invalidos(invalidos)}`
+                                    }
+                            },
+                            maxLength: {
+                                value: 300,
+                                message: `La descripcion ${MENSAJES.maximo(300)}`
+                            },
+                            }
+                        )
+                    }
+                        />
                 </label>
+                {errors.descripcion_corta && <span>{errors.descripcion_corta.message}</span>}
+                </div>
+                
+                <div>
                 <label >
                     Imagen Referencial:
                     <input
                         type="file"
                         id="imagen_referencial"
                         name="imagen_referencial"
-                        onChange={(e)=>setImagenReferencial(e.target.files)}
-                        required
-                        accept=".png,.jpg" />
+                        {...register("imagen_referencial", {
+                            required: {
+                                value: true,
+                                message: `La imagen ${MENSAJES.obligatorio}`
+                            }
+                        }
+                        )
+                    }
+                        />
                 </label>
+                {errors.imagen_referencial && <span>{errors.imagen_referencial.message}</span>}
+                </div>
+                <div>
                 <label >
                     Cantidad de Personas:
                     <input
                         type="number"
                         id="cantidad_personas"
                         name="cantidad_personas"
-                        value={cantidad_personas}
-                        onChange={(e)=>setCantidadPersonas(e.target.value)}
-                        required
+                        {...register("cantidad_personas", {
+                            required: {
+                                value: true,
+                                message: `La cantidad de personas ${MENSAJES.obligatorio}`
+                            },
+                            max: {
+                                value: 100,
+                                message: `Cantidad ${MENSAJES.rangoPersonas}`
+                            },
+                            min: {
+                                value: 0,
+                                message: `Cantidad ${MENSAJES.rangoPersonas}`
+                            },
+                            valueAsNumber: true
+                        }
+                    )
+                    }
                     />
                 </label>
+                {errors.cantidad_personas && <span>{errors.cantidad_personas.message}</span>}
+                </div>
+                <br></br>
+                <div>
                 <label >
                     Categoria:
                     <select id="categoria" name="categoria" 
-                    value={categoria}
-                    onChange={(e)=>setCategoria(e.target.value)}>
+                        {...register("categoria", {
+                            required: {
+                                value: true,
+                                message: `La categoria ${MENSAJES.obligatorio}`
+
+                            }
+                        }
+                        )
+                    }
+                        >
+                        <option value="">Elegir</option>
                         <option value="POSTRES">Postres</option>
                         <option value="ENSALADAS">Ensaladas</option>
                         <option value="PLATO_FONDO">Plato de fondo</option>
@@ -127,12 +228,23 @@ function IngresoReceta() {
                         <option value="DESAYUNOS">Desayunos</option>
                     </select>
                 </label>
+                <br></br>
+                {errors.categoria && <span>{errors.categoria.message}</span>}
+                </div>
                 <label >
                     Regimen Alimenticio:
                     <select name="regimen_alimenticio"
                     id="regimen_alimenticio"
-                    value={regimen_alimenticio}
-                    onChange={(e)=>setRegimenAlimenticio(e.target.value)}>
+                        {...register("regimen_alimenticio", {
+                            required: {
+                                value: true,
+                                message: `El regimen alimenticio ${MENSAJES.obligatorio}`
+                            }
+                        }
+                        )
+                    }
+                    >
+                        <option value="">Elegir</option>
                         <option value="NORMAL">Normal</option>
                         <option value="DIABETICO">Diabético</option>
                         <option value="CELIACO">Celíaco</option>
@@ -141,25 +253,55 @@ function IngresoReceta() {
                         <option value="SIN_LACTOSA">Sin Lactosa</option>
                     </select>
                 </label>
+                <br></br>
+                {errors.regimen_alimenticio && <span>{errors.regimen_alimenticio.message}</span>}
+                <div>
                 <label >
                     Instrucciones de Preparación:
                     <input
                         type="text"
                         name="instrucciones_preparacion"
                         id="instrucciones_preparacion" 
-                        value={instrucciones_preparacion}
-                        onChange={(e)=>setInstruccionesPreparacion(e.target.value)}
+                        {...register("instrucciones_preparacion", {
+                                required: {
+                                    value: true,
+                                    message: `Las instrucciones ${MENSAJES.obligatorio}`
+                                },
+                                validate: (value) => {
+                                    const min=20
+                                    if (!minimoSinEspacios(value, min)) {
+                                        return `Las instrucciones ${MENSAJES.minimo(min)}`
+                                    }
+                                    const invalidos = incluyeInvalidos(value, "[^\\w\\sñÑáéíóúÁÉÍÓÚ.,:;°]")
+                                    if (invalidos.length != 0)
+                                    {
+                                        return `Las instrucciones ${MENSAJES.invalidos(invalidos)}`
+                                    }
+                            },
+                            maxLength: {
+                                value: 5000,
+                                message: `Las instrucciones ${MENSAJES.maximo(5000)}`
+                            },
+                            }
+                        )
+                    }
                         />
 
                 </label>
-                <label >
-                    Ingredientes:
-                    <button onClick={addIngrediente} type="button">+
+                {errors.instrucciones_preparacion && <span>{errors.instrucciones_preparacion.message}</span>}
+                </div>
+                <div>
+                    <label >
+                        Ingredientes:
+                    </label>
+                        <button onClick={addIngrediente} type="button">+
 
-                    </button>
-                    {iterableIngredientes}
-
-                </label>
+                        </button>
+                </div>
+                        {errors.ingredientes?.root && <span>{errors.ingredientes.root.message}</span>}
+                    <div>
+                        {iterableIngredientes}
+                    </div>
                 <button type="submit">
                     Ingresar Receta
                 </button>
