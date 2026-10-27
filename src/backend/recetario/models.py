@@ -195,7 +195,7 @@ class Ingrediente(models.Model):
     # R1.5: blank=True porque con "al gusto" se completa sola (R1.14)
     cantidad_ingrediente = models.DecimalField(
         max_digits=10, decimal_places=2, 
-        validators=[MinValueValidator(0.01)],
+        validators=[MinValueValidator(0.01),MaxValueValidator(100)],
     )
     UNIDADES = {
         "VACIO":"",
