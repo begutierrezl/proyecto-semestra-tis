@@ -63,3 +63,19 @@
 .ajuste-instrucciones {
   white-space: pre-line;
 }
+
+.ajuste-form label {
+  display: block;
+}
+
+.ajuste-form select {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+  background-color: #fff;
+}

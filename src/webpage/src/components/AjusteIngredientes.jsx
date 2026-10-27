@@ -1,11 +1,13 @@
-import { useState } from "react";
-import { useParams } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useParams, useNavigate } from "react-router-dom";
 import api from "../api";
 import "../styles/AjusteIngredientes.css";
 
 // Funcion 4: Ajuste de ingredientes segun cantidad de personas
 // Consume: GET /api/get/receta/<id_receta>/ajuste/?cantidad_personas_deseada=N
-// Rutas del front: /ajuste  y  /receta/:idReceta/ajuste
+// Rutas del front: /ajuste  y  /ajuste/:idReceta  (el id de la receta va en la URL)
+// El id se puede escribir en el cuadro de texto o elegir en el desplegable (los dos van juntos)
+// Consume tambien: GET /api/receta/  (para el desplegable con las recetas que existen)
 //
 // Capa Vista (informe de planificacion): valida los datos antes de enviarlos
 // para avisar de inmediato al usuario. Los mensajes son los mismos que devuelve
@@ -43,13 +45,47 @@ const validarCantidadPersonas = (valor) => {
 };
 
 function AjusteIngredientes() {
+    // El id de la receta vive en la URL (/ajuste/:idReceta), asi queda guardado
+    // al navegar entre ajustar y valorar
     const { idReceta: idDeLaRuta } = useParams();
+    const navigate = useNavigate();
 
-    const [idReceta, setIdReceta] = useState(idDeLaRuta ?? "");
+    // Lo que hay escrito en el cuadro del id (empieza con el id de la URL)
+    const [idTexto, setIdTexto] = useState(idDeLaRuta ?? "");
+    const [recetas, setRecetas] = useState([]);
+    const [errorLista, setErrorLista] = useState("");
     const [cantidadPersonas, setCantidadPersonas] = useState("");
     const [resultado, setResultado] = useState(null);
     const [error, setError] = useState("");
     const [cargando, setCargando] = useState(false);
+
+    // Carga las recetas que existen para mostrarlas en el desplegable
+    useEffect(() => {
+        api
+            .get("/api/receta/")
+            .then((res) => {
+                const datos = Array.isArray(res.data) ? res.data : res.data.results ?? [];
+                setRecetas(datos);
+            })
+            .catch(() => setErrorLista("No se pudo cargar la lista de recetas"));
+    }, []);
+
+    // Si cambia la receta de la URL, el cuadro del id se actualiza y se limpia lo anterior
+    useEffect(() => {
+        setIdTexto(idDeLaRuta ?? "");
+        setResultado(null);
+        setError("");
+    }, [idDeLaRuta]);
+
+    // Al elegir una receta en el desplegable se llena el cuadro del id y se cambia la URL: /ajuste/<id>
+    const cambiarReceta = (e) => {
+        const nuevoId = e.target.value;
+        setIdTexto(nuevoId);
+        navigate(nuevoId ? `/ajuste/${nuevoId}` : "/ajuste");
+    };
+
+    // El desplegable solo muestra una receta si el id escrito existe en la lista
+    const idEnLista = recetas.some((r) => String(r.id) === idTexto.trim());
 
     // Convierte la respuesta de error de la API en un texto legible
     const obtenerMensajeError = (err) => {
@@ -72,18 +108,22 @@ function AjusteIngredientes() {
         setResultado(null);
 
         // R4.1 y R4.2: validacion en la vista, si hay error no se llama a la API
-        const errorValidacion = validarIdReceta(idReceta) || validarCantidadPersonas(cantidadPersonas);
+        const errorValidacion = validarIdReceta(idTexto) || validarCantidadPersonas(cantidadPersonas);
         if (errorValidacion) {
             setError(errorValidacion);
             return;
         }
+
+        // Si el id escrito es distinto al de la URL, se actualiza la URL: /ajuste/<id>
+        const idLimpio = idTexto.trim();
+        if (idLimpio !== idDeLaRuta) navigate(`/ajuste/${idLimpio}`);
 
         setCargando(true);
 
         // Solicitud al backend (controlador Django): verifica la receta (R4.3),
         // recupera sus datos (R4.4), calcula las cantidades (R4.5) y arma la salida (R4.6 y R4.7)
         api
-            .get(`/api/get/receta/${idReceta.trim()}/ajuste/`, {
+            .get(`/api/get/receta/${idLimpio}/ajuste/`, {
                 params: { cantidad_personas_deseada: cantidadPersonas.trim() },
             })
             .then((res) => setResultado(res.data))
@@ -101,9 +141,20 @@ function AjusteIngredientes() {
                     type="text"
                     inputMode="numeric"
                     id="id_receta"
-                    value={idReceta}
-                    onChange={(e) => setIdReceta(e.target.value)}
+                    value={idTexto}
+                    onChange={(e) => setIdTexto(e.target.value)}
                 />
+
+                <label htmlFor="lista_recetas">O elegir una receta de la lista:</label>
+                <select id="lista_recetas" value={idEnLista ? idTexto.trim() : ""} onChange={cambiarReceta}>
+                    <option value="">Elegir receta</option>
+                    {recetas.map((r) => (
+                        <option key={r.id} value={String(r.id)}>
+                            {r.id} - {r.nombre_receta}
+                        </option>
+                    ))}
+                </select>
+                {errorLista && <p className="ajuste-error">{errorLista}</p>}
 
                 <label htmlFor="cantidad_personas">Cantidad de personas deseada:</label>
                 <input
