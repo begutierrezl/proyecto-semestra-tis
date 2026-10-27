@@ -1,3 +1,4 @@
+import "../styles/IngresoIngrediente.css"
 //props de ingrediente: 
 //indice
 //register y errors de react hook form,
@@ -22,12 +23,11 @@ function Ingrediente({ i,register, errors ,setValue, eliminarIng, MENSAJES,minim
         }
     }
     return (
-        <div>
-        <br></br>
-            <div>
-            <label >
+          <div className="ingrediente">
+            <div className="ingrediente-campo">
+            <label className="ingrediente-etiqueta">
                 Nombre Ingrediente:
-                <input
+                <input className="ingrediente-control"
                     type="text"
                     id="nombre_ingrediente"
                     {...register(`${nombre}.nombre_ingrediente`,
@@ -54,12 +54,12 @@ function Ingrediente({ i,register, errors ,setValue, eliminarIng, MENSAJES,minim
                     )}
                     />
             </label>
-                {err?.nombre_ingrediente && <span>{err.nombre_ingrediente.message}</span>}
+                {err?.nombre_ingrediente && <span className="ingrediente-error">{err.nombre_ingrediente.message}</span>}
             </div>
-            <div>
-            <label >
+            <div className="ingrediente-campo">
+            <label className="ingrediente-etiqueta">
                 Cantidad Ingrediente:
-                <input
+                <input className="ingrediente-control"
                     type="number"
                     step="any"
                     id="cantidad_ingrediente"
@@ -72,23 +72,23 @@ function Ingrediente({ i,register, errors ,setValue, eliminarIng, MENSAJES,minim
                     )}
                 />
             </label>
-                {err?.cantidad_ingrediente && <span>{err.cantidad_ingrediente.message}</span>}
+                {err?.cantidad_ingrediente && <span className="ingrediente-error">{err.cantidad_ingrediente.message}</span>}
             </div>
-            <div>
-            <label >
+            <div className="ingrediente-campo">
+            <label className="ingrediente-etiqueta">
                 Unidad de medida:
-                <select id="unidad_medida" 
+                <select className="ingrediente-control" id="unidad_medida" 
                 {...register(`${nombre}.unidad_medida`,
                     {
                         required: `La unidad de medida ${MENSAJES.obligatorio}`,
-
+ 
                         onChange: (e) => {
                             if (e.target.value === "AL_GUSTO") {
                                 setValue(`${nombre}.cantidad_ingrediente`, 1, { shouldValidate: true })
                             }
                         }
                     }
-
+ 
                         )
                     }
                     >
@@ -103,12 +103,11 @@ function Ingrediente({ i,register, errors ,setValue, eliminarIng, MENSAJES,minim
                     <option value="UNIDADES">unidades</option>
                     <option value="AL_GUSTO">al gusto</option>
                 </select>
-                <button type="button" onClick={eliminarIng}>Eliminar Ingrediente</button>
+                <button type="button" className="ingrediente-eliminar" onClick={eliminarIng}>Eliminar Ingrediente</button>
             </label>
             </div>
-                {err?.unidad_medida && <span>{err.unidad_medida.message}</span>}
-            <br></br>
+                {err?.unidad_medida && <span className="ingrediente-error">{err.unidad_medida.message}</span>}
         </div>
-
+ 
     )
 } export default Ingrediente

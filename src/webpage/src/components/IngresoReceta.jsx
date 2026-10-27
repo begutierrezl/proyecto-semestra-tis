@@ -1,6 +1,7 @@
 import {useForm, useFieldArray} from "react-hook-form"
 import Ingrediente from "./IngresoIngrediente";
 import api from "../api"
+import "../styles/IngresoReceta.css"
 
 
 const MENSAJES = {
@@ -111,12 +112,12 @@ function IngresoReceta() {
     })
 
     return (
-        <div>
-            <form onSubmit={subir}>
-                <div>
-                    <label >
+           <div>
+            <form onSubmit={subir} className="receta-form">
+                <div className="receta-campo">
+                    <label className="receta-etiqueta">
                         Nombre de la Receta:
-                        <input
+                        <input className="receta-control"
                             type="text"
                             id="nombre_receta"
                             name="nombre_receta"
@@ -144,12 +145,12 @@ function IngresoReceta() {
                             }
                         />
                     </label>
-                    {errors.nombre_receta && <span>{errors.nombre_receta.message}</span>}
+                    {errors.nombre_receta && <span className="receta-error">{errors.nombre_receta.message}</span>}
                 </div>
-                <div>
-                <label >
+                <div className="receta-campo">
+                <label className="receta-etiqueta">
                     Descripcion:
-                    <input
+                    <input className="receta-control"
                         type="text"
                         id="descripcion_corta"
                         name="descripcion_corta"
@@ -178,13 +179,13 @@ function IngresoReceta() {
                     }
                         />
                 </label>
-                {errors.descripcion_corta && <span>{errors.descripcion_corta.message}</span>}
+                {errors.descripcion_corta && <span className="receta-error">{errors.descripcion_corta.message}</span>}
                 </div>
                 
-                <div>
-                <label >
+                <div className="receta-campo">
+                <label className="receta-etiqueta">
                     Imagen Referencial:
-                    <input
+                    <input className="receta-control receta-archivo"
                         type="file"
                         id="imagen_referencial"
                         name="imagen_referencial"
@@ -196,19 +197,19 @@ function IngresoReceta() {
                             validate:{
                                 tipo: (imagen) => tipoImagen(imagen[0]),
                                 size: (imagen) => sizeImagen(imagen[0])
-
+ 
                             }
                         }
                         )
                     }
                         />
                 </label>
-                {errors.imagen_referencial && <span>{errors.imagen_referencial.message}</span>}
+                {errors.imagen_referencial && <span className="receta-error">{errors.imagen_referencial.message}</span>}
                 </div>
-                <div>
-                <label >
+                <div className="receta-campo">
+                <label className="receta-etiqueta">
                     Cantidad de Personas:
-                    <input
+                    <input className="receta-control"
                         type="number"
                         id="cantidad_personas"
                         name="cantidad_personas"
@@ -231,18 +232,17 @@ function IngresoReceta() {
                     }
                     />
                 </label>
-                {errors.cantidad_personas && <span>{errors.cantidad_personas.message}</span>}
+                {errors.cantidad_personas && <span className="receta-error">{errors.cantidad_personas.message}</span>}
                 </div>
-                <br></br>
-                <div>
-                <label >
+                <div className="receta-campo">
+                <label className="receta-etiqueta">
                     Categoria:
-                    <select id="categoria" name="categoria" 
+                    <select className="receta-control" id="categoria" name="categoria" 
                         {...register("categoria", {
                             required: {
                                 value: true,
                                 message: `La categoria ${MENSAJES.obligatorio}`
-
+ 
                             }
                         }
                         )
@@ -258,12 +258,11 @@ function IngresoReceta() {
                         <option value="DESAYUNOS">Desayunos</option>
                     </select>
                 </label>
-                <br></br>
-                {errors.categoria && <span>{errors.categoria.message}</span>}
+                {errors.categoria && <span className="receta-error">{errors.categoria.message}</span>}
                 </div>
-                <label >
+                <label className="receta-campo receta-etiqueta">
                     Regimen Alimenticio:
-                    <select name="regimen_alimenticio"
+                    <select className="receta-control" name="regimen_alimenticio"
                     id="regimen_alimenticio"
                         {...register("regimen_alimenticio", {
                             required: {
@@ -283,12 +282,11 @@ function IngresoReceta() {
                         <option value="SIN_LACTOSA">Sin Lactosa</option>
                     </select>
                 </label>
-                <br></br>
-                {errors.regimen_alimenticio && <span>{errors.regimen_alimenticio.message}</span>}
-                <div>
-                <label >
+                {errors.regimen_alimenticio && <span className="receta-error">{errors.regimen_alimenticio.message}</span>}
+                <div className="receta-campo">
+                <label className="receta-etiqueta">
                     Instrucciones de Preparación:
-                    <input
+                    <input className="receta-control"
                         type="text"
                         name="instrucciones_preparacion"
                         id="instrucciones_preparacion" 
@@ -316,26 +314,28 @@ function IngresoReceta() {
                         )
                     }
                         />
-
+ 
                 </label>
-                {errors.instrucciones_preparacion && <span>{errors.instrucciones_preparacion.message}</span>}
+                {errors.instrucciones_preparacion && <span className="receta-error">{errors.instrucciones_preparacion.message}</span>}
                 </div>
-                <div>
-                    <label >
+                <div className="receta-ingredientes-encabezado">
+                    <label className="receta-subtitulo">
                         Ingredientes:
                     </label>
-                        <button onClick={addIngrediente} type="button">+
-
+                        <button onClick={addIngrediente} type="button" className="receta-boton-agregar">+
+ 
                         </button>
                 </div>
-                        {errors.ingredientes?.root && <span>{errors.ingredientes.root.message}</span>}
-                    <div>
+                        {errors.ingredientes?.root && <span className="receta-error">{errors.ingredientes.root.message}</span>}
+                    <div className="receta-lista-ingredientes">
                         {iterableIngredientes}
                     </div>
-                <button type="submit">
+                <button type="submit" className="receta-boton-enviar">
                     Ingresar Receta
                 </button>
             </form>
         </div>
     )
 } export default IngresoReceta
+ 
+
