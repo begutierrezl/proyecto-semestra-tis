@@ -1,0 +1,106 @@
+
+.ingrediente {
+    display: grid;
+    grid-template-columns: minmax(0, 1.5fr) minmax(160px, 1fr) minmax(0, 1.3fr);
+    gap: 12px;
+    align-items: start;
+    padding: 14px 16px;
+    border-left: 5px solid #007bff;
+    border-radius: 5px;
+    background-color: #f9f9f9;
+}
+
+
+.ingrediente br {
+    display: none;
+}
+
+.ingrediente-campo {
+    min-width: 0; /* evita que el input desborde su columna */
+}
+
+.ingrediente-etiqueta {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+    margin-top: 0;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+.ingrediente-control {
+    width: 100%;
+    margin: 0;
+    padding: 9px 10px;
+    box-sizing: border-box;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: #fff;
+    color: #333;
+    font-family: inherit;
+    font-size: 15px;
+    font-weight: normal;
+}
+
+select.ingrediente-control {
+    cursor: pointer;
+}
+
+.ingrediente-control:focus {
+    outline: none;
+    border-color: #007bff;
+    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+}
+
+/* Cantidad bloqueada cuando la unidad es "al gusto" */
+.ingrediente-control[readonly] {
+    background-color: #eee;
+    color: #666;
+    cursor: not-allowed;
+}
+
+/* ---------- Errores ---------- */
+
+.ingrediente-error {
+    display: block;
+    margin-top: 6px;
+    color: #c62828;
+    font-size: 13px;
+    font-weight: normal;
+    line-height: 1.4;
+}
+
+/* El error de la unidad es hijo directo del grid: va bajo la 3a columna */
+.ingrediente > .ingrediente-error {
+    grid-column: 3;
+    margin-top: 0;
+}
+
+/* ---------- Eliminar (esta dentro del label de la unidad) ---------- */
+
+.ingrediente-eliminar {
+    align-self: flex-start;
+    margin-top: 4px;
+    padding: 6px 12px;
+    border: 1px solid #d32f2f;
+    border-radius: 4px;
+    background-color: transparent;
+    color: #c62828;
+    font-family: inherit;
+    font-size: 14px;
+    font-weight: normal;
+    cursor: pointer;
+    transition: background-color 0.2s ease-in-out, color 0.2s ease-in-out;
+}
+
+.ingrediente-eliminar:hover {
+    background-color: #d32f2f;
+    color: #fff;
+}
+
+.ingrediente-eliminar:focus-visible {
+    outline: 2px solid #d32f2f;
+    outline-offset: 2px;
+}
+
