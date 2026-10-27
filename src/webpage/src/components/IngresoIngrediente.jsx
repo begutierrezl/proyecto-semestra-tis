@@ -70,7 +70,7 @@ function Ingrediente({ i,register, errors ,setValue, eliminarIng, MENSAJES,minim
                             required: `La cantidad del ingrediente ${MENSAJES.obligatorio}`,
                             validate: (valor)=> compruebaDecimales(valor),
                             max:{
-                                value: 100,
+                                value: 1000,
                                 message: `La cantidad del ingrediente ${MENSAJES.rangoCantidad}`
                             },
                             min:{
