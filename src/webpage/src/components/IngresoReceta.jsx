@@ -15,6 +15,7 @@ const MENSAJES = {
     tipoImagen: "no es un ingreso valido, solo se aceptan archivos JPG o PNG.",
     imagenGrande: "no es un ingreso valido, la imagen no puede superar los 5 MB.",
     rangoPersonas: "no es un ingreso valido, debe estar entre 1 y 100.",
+    entero: "no es un ingreso valido, debe ser un numero entero",
 };
 function IngresoReceta() {
     //estados de valores
@@ -41,6 +42,15 @@ function IngresoReceta() {
         return invalidos
         
     }
+    const compruebaEntero = (valor) => {
+    const string = String(valor)
+    const regex = /^\d+$/
+    if (regex.test(string)) {
+        return true
+    } else {
+        return `La cantidad de personas ${MENSAJES.entero}`
+    }
+}
     //revisa que tamaño de imagen no sea mas de 5 MB
     const sizeImagen = (imagen) =>{
         const size= imagen.size
@@ -226,6 +236,7 @@ function IngresoReceta() {
                                 value: 0,
                                 message: `La cantidad de personas ${MENSAJES.rangoPersonas}`
                             },
+                            validate: (value)=> compruebaEntero(value),
                             valueAsNumber: true //no deja continuar si no es numero
                         }
                     )
