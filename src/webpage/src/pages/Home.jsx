@@ -1,6 +1,7 @@
 import NavBar from "../components/NavBar";
 import BuscadorRecetas from "../components/BuscadorRecetas";
 import ListadoRecetasPopulares from "../components/ListadoRecetasPopulares";
+import "../styles/theme.css";
 import "../styles/Home.css";
 
 

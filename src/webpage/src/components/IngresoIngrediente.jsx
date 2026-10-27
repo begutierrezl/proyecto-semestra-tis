@@ -1,3 +1,4 @@
+import "../styles/theme.css";
 import "../styles/IngresoIngrediente.css"
 //props de ingrediente: 
 //indice

@@ -1,0 +1,12 @@
+:root {
+  --dominante: #F9F9F9;          /* 60% fondos y superficies */
+  --secundario: #708238;         /* 30% navbar, bordes, encabezados */
+  --secundario-oscuro: #4F5B27;
+  --secundario-claro: #E8EDD6;
+  --acento: #E07A5F;             /* 10% botones y estado activo */
+  --acento-oscuro: #C4624A;
+}
+
+body {
+  background-color: var(--dominante);
+}

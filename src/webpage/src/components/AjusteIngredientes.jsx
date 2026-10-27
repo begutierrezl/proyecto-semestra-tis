@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../api";
+import "../styles/theme.css";
 import "../styles/AjusteIngredientes.css";
 
 // Funcion 4: Ajuste de ingredientes segun cantidad de personas

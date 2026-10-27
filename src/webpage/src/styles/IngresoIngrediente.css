@@ -5,9 +5,9 @@
     gap: 12px;
     align-items: start;
     padding: 14px 16px;
-    border-left: 5px solid #007bff;
+    border-left: 5px solid var(--secundario);
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: var(--dominante);
 }
 
 
@@ -36,7 +36,7 @@
     box-sizing: border-box;
     border: 1px solid #ccc;
     border-radius: 4px;
-    background-color: #fff;
+    background-color: var(--dominante);
     color: #333;
     font-family: inherit;
     font-size: 15px;
@@ -49,8 +49,8 @@ select.ingrediente-control {
 
 .ingrediente-control:focus {
     outline: none;
-    border-color: #007bff;
-    box-shadow: 0 0 0 2px rgba(0, 123, 255, 0.25);
+    border-color: var(--secundario);
+    box-shadow: 0 0 0 2px rgba(112, 130, 56, 0.25);
 }
 
 /* Cantidad bloqueada cuando la unidad es "al gusto" */

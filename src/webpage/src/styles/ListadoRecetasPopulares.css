@@ -7,8 +7,9 @@
     --rp-color-borde: #dcdcdc;
     --rp-color-texto: #222222;
     --rp-color-texto-suave: #666666;
-    --rp-color-acento: #c2410c;
-    --rp-color-estrella: #e0a800;
+    --rp-color-acento: var(--secundario);
+    --rp-color-boton: var(--acento);
+    --rp-color-estrella: var(--acento);
     --rp-color-error: #b00020;
 
     max-width: var(--rp-ancho-max);
@@ -99,16 +100,16 @@
 
 .receta-card__boton {
     padding: 0.4rem 0.9rem;
-    border: 1px solid var(--rp-color-acento);
+    border: 1px solid var(--rp-color-boton);
     border-radius: 6px;
     background: transparent;
-    color: var(--rp-color-acento);
+    color: #b4513a;
     font-size: 0.95rem;
     cursor: pointer;
 }
 
 .receta-card__boton:hover {
-    background: var(--rp-color-acento);
+    background: var(--rp-color-boton);
     color: #ffffff;
 }
 

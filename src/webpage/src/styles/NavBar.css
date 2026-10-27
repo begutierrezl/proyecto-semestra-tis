@@ -3,7 +3,7 @@
   justify-content: space-between;
   align-items: center;
   padding: 0.75rem 1.5rem;
-  background: #2c3e50;
+  background: var(--secundario);
   position: sticky;
   top: 0;
   z-index: 100;
@@ -24,7 +24,7 @@
 .navbar-boton {
   padding: 0.5rem 1rem;
   border-radius: 6px;
-  background: #3e5871;
+  background: var(--secundario-oscuro);
   color: #fff;
   text-decoration: none;
   font-weight: 500;
@@ -32,12 +32,12 @@
 }
 
 .navbar-boton:hover {
-  background: #4f7094;
+  background: #566628;
 }
 
 /* NavLink agrega esta clase a la ruta activa */
 .navbar-boton.active {
-  background: #e67e22;
+  background: var(--acento);
 }
 
 @media (max-width: 480px) {

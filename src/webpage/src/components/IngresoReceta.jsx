@@ -1,6 +1,7 @@
 import {useForm, useFieldArray} from "react-hook-form"
 import Ingrediente from "./IngresoIngrediente";
 import api from "../api"
+import "../styles/theme.css";
 import "../styles/IngresoReceta.css"
 
 

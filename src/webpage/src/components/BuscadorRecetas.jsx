@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import "../styles/theme.css";
 import '../styles/BuscadorRecetas.css';
 
 const BuscadorRecetas = () => {

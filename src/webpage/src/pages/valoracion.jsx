@@ -4,6 +4,7 @@ import Likert from 'react-likert-scale';
 import api from '../api';
 import { ACCESS_TOKEN } from '../constants';
 import { jwtDecode } from 'jwt-decode';
+import "../styles/theme.css";
 import '../styles/Valoracion.css';
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
