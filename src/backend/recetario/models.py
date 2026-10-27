@@ -117,7 +117,7 @@ class Receta(models.Model):
             MinLengthValidator(3),
             # Regex: valores en 1.2 que: "se aceptarán caracteres alfabéticos en mayúscula, numéricos y  espacios"
             # no incluye a proposito caracteres:  |, &, <, >
-            RegexValidator(r"^[A-ZÁÉÍÓÚÜÑ0-9 ]+$",
+            RegexValidator(r"^[A-ZÁÉÍÓÚÜÑ0-9\s]+$",
                            "NOMBRE_RECETA no es un ingreso válido, incluye caracteres no permitidos o incluye minúsculas"),
         ],
         error_messages={
@@ -131,7 +131,7 @@ class Receta(models.Model):
         validators=[
             MinLengthValidator(10),
             #Regex: valores de 1.3 que entran en "se aceptarán caracteres alfabéticos, numéricos,  espacios y signos de puntuación básicos(punto, coma, punto y coma)"
-            RegexValidator(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .,;:]+$",
+            RegexValidator(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9\s.,;:]+$",
                            "DESCRIPCION_CORTA no es un ingreso válido, incluye caracteres no permitidos"),
         ],
     )
@@ -141,7 +141,7 @@ class Receta(models.Model):
         upload_to="recetas/",
         validators=[FileExtensionValidator(["jpg", "png"]),
                     validar_tamano_imagen],
-        default="c.jpg",
+
     ) 
 
     # R1.8
@@ -159,7 +159,7 @@ class Receta(models.Model):
         validators=[
             MinLengthValidator(20),
             MaxLengthValidator(5000),
-            RegexValidator(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9 .,;:()¿?¡!\-\n]+$",
+            RegexValidator(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ0-9.,°;:()¿?¡!\-\s]+$",
                            "INSTRUCCIONES_PREPARACION no es un ingreso válido, incluye caracteres no permitidos"),
         ],
     )
@@ -187,7 +187,7 @@ class Ingrediente(models.Model):
         max_length=80,
         validators=[
             MinLengthValidator(3, "NOMBRE_INGREDIENTE no es un ingreso válido, debe tener minimo 3 caracteres"),
-            RegexValidator(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ 0-9.,;:]+$",
+            RegexValidator(r"^[A-Za-zÁÉÍÓÚÜÑáéíóúüñ\s0-9.,;:]+$",
                            "NOMBRE_INGREDIENTE no es un ingreso válido, incluye caracteres no permitidos"),
         ],
     )
