@@ -1,4 +1,3 @@
-import { useState } from "react"
 import {useForm, useFieldArray} from "react-hook-form"
 import Ingrediente from "./IngresoIngrediente";
 import api from "../api"
@@ -12,15 +11,18 @@ const MENSAJES = {
     numero: "no es un ingreso valido, Campo debe ser un numero",
     mayorACero: "no es un ingreso valido, debe ser mayor a cero.",
     maxDecimales: "no es un ingreso valido, máximo 2 decimales.",
-    soloImagen: "no es un ingreso valido, solo se aceptan archivos JPG o PNG.",
+    tipoImagen: "no es un ingreso valido, solo se aceptan archivos JPG o PNG.",
     imagenGrande: "no es un ingreso valido, la imagen no puede superar los 5 MB.",
     rangoPersonas: "no es un ingreso valido, debe estar entre 1 y 100.",
 };
 function IngresoReceta() {
     //estados de valores
-    const {register,handleSubmit,formState: {errors},control} = useForm()
+    const {register,handleSubmit,formState: {errors},control,setValue,watch} = useForm()
     const { fields, append, remove } = useFieldArray({ control, name: "ingredientes", rules : {required: "Minimo un ingrediente"} });
     
+    //Validaciones hechas usado react-hook-form y llamando las siguientes funciones cuando es necesario
+
+    //cuenta caracteres string sin espacios
     const minimoSinEspacios= (dato,min)=>{
         const sinEspacios=dato.replace(/ /g,"");
         if(sinEspacios.length<min)
@@ -30,10 +32,7 @@ function IngresoReceta() {
             return true
         }
     }
-    const nombreUnico = (value) =>
-    {
-        return true
-    }
+    //recupera todos los caracteres invalidos del valor
     const incluyeInvalidos= (value,er) =>
     {
         const exreg= new RegExp(er,"g")
@@ -41,7 +40,29 @@ function IngresoReceta() {
         return invalidos
         
     }
-    //itera por la lista de ingredientes que hay para mostrar en la pagina
+    //revisa que tamaño de imagen no sea mas de 5 MB
+    const sizeImagen = (imagen) =>{
+        const size= imagen.size
+        if(size> 5 * 1024 * 1024)
+        {
+            return `La imagen ${MENSAJES.imagenGrande}`
+        }else
+        {
+            return true
+        }
+    }
+    //revisa el tipo de imagen
+    const tipoImagen = (imagen) =>
+    {
+        const tipo = imagen.type
+        if(tipo == "image/jpeg" || tipo == "image/png"){
+            return true
+        }else{
+            return `La imagen ${MENSAJES.tipoImagen}`
+        }
+    }
+
+    //itera por la lista de ingredientes que hay y los retorna como el componente ingrediente
     const iterableIngredientes = fields.map((ingrediente,i)=> (
         
     <Ingrediente
@@ -51,6 +72,10 @@ function IngresoReceta() {
         errors={errors}
         eliminarIng={() => remove(i)}
         MENSAJES={MENSAJES}
+        minimoSinEspacios={minimoSinEspacios}
+        incluyeInvalidos={incluyeInvalidos}
+        setValue={setValue}
+        watch={watch}
     />
 ))
     const crearIngredienteNuevo = () => ({
@@ -59,27 +84,30 @@ function IngresoReceta() {
 
     const addIngrediente = () => append(crearIngredienteNuevo());
 
-
+    //funcion encargada de enviar al backend como formData
     const subir =handleSubmit (async(datos) =>{
         const url="http://localhost:8000/api/receta/insert/" //Para desarrollo
-        const formData = new FormData(datos.target);//le entregamos lo que sube el evento que es la form
-        formData.append("nombre_receta",datos.nombre_receta.toUpperCase())//Mayusculas R1.14
+        const formData = new FormData();// se crea form para enviar como form
+        formData.append("nombre_receta",datos.nombre_receta.toUpperCase())//R1.14: se envia nombre como mayusculas
         formData.append("descripcion_corta", datos.descripcion_corta);
-        formData.append("imagen_referencial", datos.imagen_referencial[0]);  // FileList -> archivo
+        formData.append("imagen_referencial", datos.imagen_referencial[0]);  //file es arreglo, [0] es archivo
         formData.append("cantidad_personas", datos.cantidad_personas);
         formData.append("categoria", datos.categoria);
         formData.append("regimen_alimenticio", datos.regimen_alimenticio);
         formData.append("instrucciones_preparacion", datos.instrucciones_preparacion);
-        formData.append("ingrediente_receta", JSON.stringify(datos.ingredientes));//añadidos manualmente
-        console.log(formData);
+        formData.append("ingrediente_receta", JSON.stringify(datos.ingredientes));// ingredientes como json
         try
         {
         const respuesta = await api.post(url,formData);
+        alert("Receta registrada existosamente") //R1.18
         }catch(error)
         {
-        console.log(error.response);
+            const mensajeError = error.response?.data;
+            //forma de colocar error de django en alert
+            //Uso principal para R1.15: no se repita nombre de receta
+            const texto = Object.entries(mensajeError).map(([campo, msj]) => `${Array.isArray(msj) ? msj.join(" ") : msj}`).join("\n");
+            alert(texto);
         }
-        console.log(formData)
     })
 
     return (
@@ -100,9 +128,6 @@ function IngresoReceta() {
                                 validate: (value) => {
                                     if (!minimoSinEspacios(value, 3)) {
                                         return `El nombre de la receta ${MENSAJES.minimo(3)}`
-                                    }
-                                    if (!nombreUnico(value)) {
-                                        return "Ya existe una receta con ese  nombre. Por favor, utilice un nombre diferente.";
                                     }
                                     const invalidos = incluyeInvalidos(value, "[^\\w\\sñÑáéíóúÁÉÍÓÚ]")
                                     if (invalidos.length != 0)
@@ -167,6 +192,11 @@ function IngresoReceta() {
                             required: {
                                 value: true,
                                 message: `La imagen ${MENSAJES.obligatorio}`
+                            },
+                            validate:{
+                                tipo: (imagen) => tipoImagen(imagen[0]),
+                                size: (imagen) => sizeImagen(imagen[0])
+
                             }
                         }
                         )
@@ -189,13 +219,13 @@ function IngresoReceta() {
                             },
                             max: {
                                 value: 100,
-                                message: `Cantidad ${MENSAJES.rangoPersonas}`
+                                message: `La cantidad de personas ${MENSAJES.rangoPersonas}`
                             },
                             min: {
                                 value: 0,
-                                message: `Cantidad ${MENSAJES.rangoPersonas}`
+                                message: `La cantidad de personas ${MENSAJES.rangoPersonas}`
                             },
-                            valueAsNumber: true
+                            valueAsNumber: true //no deja continuar si no es numero
                         }
                     )
                     }
