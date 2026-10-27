@@ -5,6 +5,7 @@ import Register from "./pages/Register"
 import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/ProtectedRoute"
+import FormularioValoracion from "./pages/valoracion"
 import BuscadorRecetas from "./pages/BuscadorRecetas"
 import ListadoRecetaPopulares from "./pages/ListadoRecetasPopulares"
 import AjusteIngredientes from "./components/AjusteIngredientes" // Funcion 4: ajuste de ingredientes
@@ -33,6 +34,8 @@ function App() {
         <Route path="/receta/:idReceta/ajuste" element={<AjusteIngredientes />} />
         <Route path="/ingreso" element={<IngresoRecetaPagina />} />
         <Route path="*" element={<NotFound />}></Route>
+        <Route path="/valoracion" element={<FormularioValoracion />} />
+        <Route path="/valoracion/:idReceta" element={<FormularioValoracion />} />
       </Routes>
     </BrowserRouter>
   )
