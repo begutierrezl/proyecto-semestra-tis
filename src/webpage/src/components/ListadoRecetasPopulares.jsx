@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import api from "../api";
-import LoadingIndicator from "../components/LoadingIndicator";
-import RecetaCard from "../components/RecetaCalificacion";
+import LoadingIndicator from "./LoadingIndicator"
+import RecetaCard from "./RecetaCalificacion";
 import '../styles/ListadoRecetasPopulares.css';
 
 

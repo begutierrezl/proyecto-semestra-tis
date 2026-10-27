@@ -1,0 +1,20 @@
+import { Link, NavLink } from "react-router-dom";
+import "../styles/NavBar.css";
+
+function Navbar() {
+  return (
+    <nav className="navbar">
+      <Link to="/" className="navbar-logo">Recetario</Link>
+      <div className="navbar-botones">
+        <NavLink to="/ingreso" className="navbar-boton">
+          Ingresar receta
+        </NavLink>
+        <NavLink to="/valoracion" className="navbar-boton">
+          Valorar receta
+        </NavLink>
+      </div>
+    </nav>
+  );
+}
+
+export default Navbar;
