@@ -31,7 +31,7 @@ function App() {
         <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="/buscar" element={<BuscadorRecetas />} />
         <Route path="/ajuste" element={<AjusteIngredientes />} />
-        <Route path="/receta/:idReceta/ajuste" element={<AjusteIngredientes />} />
+        <Route path="/ajuste/:idReceta" element={<AjusteIngredientes />} />
         <Route path="/ingreso" element={<IngresoRecetaPagina />} />
         <Route path="*" element={<NotFound />}></Route>
         <Route path="/valoracion" element={<FormularioValoracion />} />
