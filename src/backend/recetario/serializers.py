@@ -30,7 +30,7 @@ class UserSerializer(serializers.ModelSerializer):
 # Funcion 1: 
 # ----------------------------------------------------------------------
       
-class IngredienteSerializer(serializers.ModelSerializer):
+class CreateIngredienteSerializer(serializers.ModelSerializer):
     class Meta:
         model = Ingrediente
         fields = [
@@ -42,11 +42,21 @@ class IngredienteSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         ingrediente = Ingrediente.objects.create_user(**validated_data)
         return ingrediente
+class ReadIngredienteSerializer(serializers.ModelSerializer):
+    unidad_medida=serializers.CharField(source="get_unidad_medida_display", read_only=True) 
+    class Meta:
+        model = Ingrediente
+        fields = [
+          "nombre_ingrediente",
+          "cantidad_ingrediente",
+          "unidad_medida"
+        ]
+
 
 #serializador para crear las recetas
 class CreateRecetaSerializer(serializers.ModelSerializer):
     #para incluir los ingredientes
-    ingrediente_receta = IngredienteSerializer(many=True)
+    ingrediente_receta = CreateIngredienteSerializer(many=True)
     class Meta:
         model = Receta
         fields = [
@@ -95,7 +105,7 @@ class CreateRecetaSerializer(serializers.ModelSerializer):
 
 #serializador para recuperar recetas
 class ReadRecetaSerializer(serializers.ModelSerializer):
-    ingrediente_receta = IngredienteSerializer(many=True, read_only=True)
+    ingrediente_receta = ReadIngredienteSerializer(many=True, read_only=True)
     #muestran nombres para mostrar 
     categoria = serializers.CharField(source="get_categoria_display", read_only=True) 
     regimen_alimenticio = serializers.CharField(source="get_regimen_alimenticio_display", read_only=True)

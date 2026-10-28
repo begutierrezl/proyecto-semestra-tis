@@ -10,6 +10,7 @@ import BuscadorRecetas from "./pages/BuscadorRecetas"
 import ListadoRecetaPopulares from "./pages/ListadoRecetasPopulares"
 import AjusteIngredientes from "./components/AjusteIngredientes" // Funcion 4: ajuste de ingredientes
 import IngresoRecetaPagina from "./pages/IngresoRecetaPagina"
+import MostrarRecetaPagina from "./pages/MostrarRecetaPagina"
 
 function Logout() {
   localStorage.clear()
@@ -33,6 +34,7 @@ function App() {
         <Route path="/ajuste" element={<AjusteIngredientes />} />
         <Route path="/receta/:idReceta/ajuste" element={<AjusteIngredientes />} />
         <Route path="/ingreso" element={<IngresoRecetaPagina />} />
+        <Route path="/receta/:idReceta" element={<MostrarRecetaPagina/>} />
         <Route path="*" element={<NotFound />}></Route>
         <Route path="/valoracion" element={<FormularioValoracion />} />
         <Route path="/valoracion/:idReceta" element={<FormularioValoracion />} />
