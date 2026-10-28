@@ -32,7 +32,7 @@ function App() {
         <Route path="/register" element={<RegisterAndLogout />} />
         <Route path="/buscar" element={<BuscadorRecetas />} />
         <Route path="/ajuste" element={<AjusteIngredientes />} />
-        <Route path="/receta/:idReceta/ajuste" element={<AjusteIngredientes />} />
+        <Route path="/ajuste/:idReceta" element={<AjusteIngredientes />} />
         <Route path="/ingreso" element={<IngresoRecetaPagina />} />
         <Route path="/receta/:idReceta" element={<MostrarRecetaPagina/>} />
         <Route path="*" element={<NotFound />}></Route>
