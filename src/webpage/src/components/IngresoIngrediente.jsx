@@ -14,8 +14,9 @@ function Ingrediente({ i,register, errors ,setValue, eliminarIng, MENSAJES,minim
     const unidad=watch(`${nombre}.unidad_medida`)// para cuando sea al gusto no cambie valor cantidad
     const compruebaDecimales= (valor) =>
     {
+        //se transforma a string y se comprueba con expresion regular
         const string = String(valor)
-        const regex= /^\d+(\.\d{0,2})?$/
+        const regex= /^\d+((\.|,)\d{0,2})?$/
         if(regex.test(string))
         {
             return true
@@ -68,7 +69,15 @@ function Ingrediente({ i,register, errors ,setValue, eliminarIng, MENSAJES,minim
                     {...register(`${nombre}.cantidad_ingrediente`,
                         {
                             required: `La cantidad del ingrediente ${MENSAJES.obligatorio}`,
-                            validate: (valor)=> compruebaDecimales(valor)
+                            validate: (valor)=> compruebaDecimales(valor),
+                            max:{
+                                value: 1000,
+                                message: `La cantidad del ingrediente ${MENSAJES.rangoCantidad}`
+                            },
+                            min:{
+                                value:0.01,
+                                message: `La cantidad del ingrediente ${MENSAJES.rangoCantidad}`
+                            }
                         }
                     )}
                 />

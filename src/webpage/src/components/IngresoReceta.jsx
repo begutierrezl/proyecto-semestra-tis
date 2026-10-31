@@ -17,6 +17,7 @@ const MENSAJES = {
     imagenGrande: "no es un ingreso valido, la imagen no puede superar los 5 MB.",
     rangoPersonas: "no es un ingreso valido, debe estar entre 1 y 100.",
     entero: "no es un ingreso valido, debe ser un numero entero",
+    rangoCantidad: "no es un ingreso valido, debe estar entre 0.01 y 100"
 };
 function IngresoReceta() {
     //estados de valores
