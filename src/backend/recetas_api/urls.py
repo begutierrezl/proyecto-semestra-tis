@@ -16,12 +16,12 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from recetario.views import CreateUserView
-from recetario.views import ListRecetasView, CreateRecetaView, RetrieveRecetaIdView
-from recetario.views import RetrieveValoracionView, RegistrarValoracionView, ActualizarValoracionView
-from recetario.views import CreateCalificacionView, RetrieveUpdateCalificacionFromIdView, RetrieveUpdateCalifiacionFromRecetaView
-from recetario.views import AjusteIngredientesView
-from recetario.views import buscar_recetas
+from recetario.views.valoracion import CreateUserView
+from recetario.views.receta import ListRecetasView, CreateRecetaView, RetrieveRecetaIdView
+from recetario.views.valoracion import RegistrarValoracionView, ActualizarValoracionView
+from recetario.views.calificacion import RetrieveValoracionView, CreateCalificacionView, RetrieveUpdateCalificacionFromIdView, RetrieveUpdateCalifiacionFromRecetaView
+from recetario.views.ajuste import AjusteIngredientesView
+from recetario.views.busqueda import buscar_recetas
 from rest_framework_simplejwt.views import TokenObtainPairView, TokenRefreshView
 from django.conf import settings
 from django.conf.urls.static import static

@@ -1,5 +1,7 @@
 from django.contrib import admin
-from .models import Receta, Ingrediente, Valoracion, CalificacionReceta
+from .models.receta import Receta, Ingrediente
+from .models.valoracion import Valoracion
+from .models.calificacion import CalificacionReceta
 
 # Register your models here.
 

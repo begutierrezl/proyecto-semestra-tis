@@ -15,6 +15,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='receta',
             name='imagen_referencial',
-            field=models.ImageField(default='c.jpg', upload_to='recetas/', validators=[django.core.validators.FileExtensionValidator(['jpg', 'png']), recetario.models.validar_tamano_imagen]),
+            field=models.ImageField(default='c.jpg', upload_to='recetas/', validators=[django.core.validators.FileExtensionValidator(['jpg', 'png']), recetario.models.receta.validar_tamano_imagen]),
         ),
     ]

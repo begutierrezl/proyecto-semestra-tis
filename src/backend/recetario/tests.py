@@ -4,8 +4,8 @@ from django.test import TestCase
 from django.urls import reverse
 from rest_framework.test import APIClient
 
-from .models import Receta, Ingrediente
-from .models import CalificacionReceta
+from .models.receta import Receta, Ingrediente
+from .models.calificacion import CalificacionReceta
 
 # Create your tests here.
 
