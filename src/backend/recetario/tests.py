@@ -420,7 +420,7 @@ class AjusteIngredientesTestCase(TestCase):
     def testAjuste_U03_CantidadDeseadaIgualALaOriginal(self):
         receta = self.crearReceta("RECETA U03", 4, [("Harina", "200", "GRAMOS")])
         # R4.7: no se debe ejecutar el calculo de R4.5
-        with patch("recetario.models.calcular_cantidad_ajustada") as calculo:
+        with patch("recetario.views.ajuste.calcular_cantidad_ajustada") as calculo:
             respuesta = self.pedirAjuste(receta.id, 4)
             calculo.assert_not_called()
         self.assertEqual(respuesta.status_code, 200)
@@ -451,7 +451,7 @@ class AjusteIngredientesTestCase(TestCase):
     # --- U-05: ID_RECETA inexistente (R4.3) ---------------------------
 
     def testAjuste_U05_IdRecetaInexistente(self):
-        with patch("recetario.views.generar_receta_ajustada") as calculo:
+        with patch("recetario.views.ajuste.generar_receta_ajustada") as calculo:
             respuesta = self.pedirAjuste(999999, 4)
             calculo.assert_not_called()
         self.assertEqual(respuesta.status_code, 404)
@@ -463,7 +463,7 @@ class AjusteIngredientesTestCase(TestCase):
         """El valor debe rechazarse con error 400 (controlado), con el
         mensaje esperado, y sin ejecutar el calculo."""
         receta = self.crearReceta("RECETA RECHAZO", 4, [("Harina", "200", "GRAMOS")])
-        with patch("recetario.views.generar_receta_ajustada") as calculo:
+        with patch("recetario.views.ajuste.generar_receta_ajustada") as calculo:
             respuesta = self.pedirAjuste(receta.id, valor)
             calculo.assert_not_called()
         self.assertEqual(respuesta.status_code, 400)
