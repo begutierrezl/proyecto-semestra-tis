@@ -109,3 +109,11 @@
     border-color: var(--secundario);
     box-shadow: 0 0 0 2px rgba(112, 130, 56, 0.25);
 }
+
+.titulo-receta {
+    text-transform: lowercase;
+}
+
+.titulo-receta::first-letter {
+    text-transform: capitalize;
+}

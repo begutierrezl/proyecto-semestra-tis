@@ -94,7 +94,7 @@ const BuscadorRecetas = () => {
             <div className="resultados-lista">
                 {resultados.map((receta) => (
                     <div key={receta.id} className="receta-card">
-                        <h3>{receta.nombre_receta}</h3>
+                        <h3 className="titulo-receta">{receta.nombre_receta}</h3>
                         <p><strong>Categoría:</strong> {formatoCategoria[receta.categoria]} | <strong>Régimen:</strong> {formatoRegimen[receta.regimen_alimenticio]}</p>
                         <p>{receta.descripcion_corta}</p>
                         <a href={receta.enlace_receta} target="_blank" rel="noreferrer" className="receta-link">Ver Receta Completa</a>

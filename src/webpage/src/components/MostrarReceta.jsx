@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import api from "../api";
-import "../styles/Receta.css";
+import "../styles/MostrarReceta.css";
 function Receta() {
     const {idReceta}= useParams()
     const [recetaDatos, setRecetaDatos]= useState(null);
