@@ -5,7 +5,7 @@ import Register from "./pages/Register"
 import Home from "./pages/Home"
 import NotFound from "./pages/NotFound"
 import ProtectedRoute from "./components/ProtectedRoute"
-import FormularioValoracion from "./pages/valoracion"
+import FormularioValoracion from "./components/Valoracion"
 import AjusteIngredientes from "./components/AjusteIngredientes" // Funcion 4: ajuste de ingredientes
 import IngresoRecetaPagina from "./pages/IngresoRecetaPagina"
 import MostrarRecetaPagina from "./pages/MostrarRecetaPagina"

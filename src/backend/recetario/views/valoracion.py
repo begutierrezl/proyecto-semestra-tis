@@ -4,7 +4,7 @@ from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
 from ..models.receta import Receta
 from ..models.valoracion import Valoracion
-from ..serializers.valoracion import UserSerializer
+from ..serializers.valoracion import UserSerializer, ValoracionInputSerializer
 from rest_framework.views import APIView
 
 # Complemento de funcion 2

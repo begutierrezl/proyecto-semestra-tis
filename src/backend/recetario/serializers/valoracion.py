@@ -1,5 +1,6 @@
 from django.contrib.auth.models import User
 from rest_framework import serializers
+from ..models.valoracion import Valoracion
 
 class UserSerializer(serializers.ModelSerializer):
 
