@@ -1,0 +1,81 @@
+/* Funcion 4: estilos de la vista de ajuste de ingredientes */
+.ajuste-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+.ajuste-container h1 {
+  color: #333;
+  text-align: center;
+}
+
+.ajuste-error {
+  background-color: #fdecea;
+  border-left: 5px solid #d32f2f;
+  color: #b71c1c;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-top: 16px;
+}
+
+.ajuste-resultado {
+  background-color: var(--dominante);
+  border-left: 5px solid var(--secundario);
+  padding: 10px 20px 20px;
+  border-radius: 5px;
+  margin-top: 24px;
+}
+
+.ajuste-etiquetas span {
+  display: inline-block;
+  background-color: var(--secundario-claro);
+  color: var(--secundario-oscuro);
+  padding: 2px 10px;
+  border-radius: 12px;
+  margin-right: 8px;
+  font-size: 14px;
+}
+
+.ajuste-mensaje {
+  font-weight: bold;
+  color: var(--secundario-oscuro);
+}
+
+.ajuste-tabla {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+}
+
+.ajuste-tabla th,
+.ajuste-tabla td {
+  text-align: left;
+  padding: 8px;
+  border-bottom: 1px solid #ddd;
+}
+
+.ajuste-tabla th {
+  background-color: var(--secundario);
+  color: white;
+}
+
+.ajuste-instrucciones {
+  white-space: pre-line;
+}
+
+.ajuste-form label {
+  display: block;
+}
+
+.ajuste-form select {
+  display: block;
+  width: 100%;
+  padding: 8px;
+  margin: 8px 0 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  font-size: 16px;
+  background-color: #fff;
+}

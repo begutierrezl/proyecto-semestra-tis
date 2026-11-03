@@ -1,0 +1,119 @@
+.buscador-container {
+    background-color: var(--dominante);
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    max-width: 600px;
+    margin: 50px auto;
+    font-family: Arial, sans-serif;
+}
+
+.buscador-container h2 {
+    color: #333;
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.buscador-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.buscador-input,
+.buscador-select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    font-size: 15px;
+}
+
+.buscador-button {
+    width: 100%;
+    padding: 10px;
+    margin: 15px 0;
+    background-color: var(--acento);
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.buscador-button:hover {
+    background-color: var(--acento-oscuro);
+}
+
+.error-mensaje {
+    color: #f44336;
+    text-align: center;
+    font-weight: bold;
+}
+
+.receta-card {
+    background-color: var(--dominante);
+    border-left: 5px solid var(--secundario);
+    margin: 15px 0;
+    padding: 15px;
+    border-radius: 5px;
+}
+
+.receta-card h3 {
+    color: #333;
+    margin-top: 0;
+}
+
+.receta-card p {
+    color: #666;
+    margin: 8px 0;
+}
+
+.receta-link {
+    display: inline-block;
+    margin-top: 10px;
+    color: var(--secundario);
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.receta-link:hover {
+    text-decoration: underline;
+}
+
+.filtros-fila {
+    display: flex;
+    gap: 15px;
+    width: 100%;
+    margin-top: 5px;
+}
+
+.buscador-select {
+    flex: 1;
+    padding: 12px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    background-color: white;
+    color: #333;
+    font-size: 15px;
+    cursor: pointer;
+    appearance: auto;
+}
+
+.buscador-input:focus,
+.buscador-select:focus {
+    outline: none;
+    border-color: var(--secundario);
+    box-shadow: 0 0 0 2px rgba(112, 130, 56, 0.25);
+}
+
+.titulo-receta {
+    text-transform: lowercase;
+}
+
+.titulo-receta::first-letter {
+    text-transform: capitalize;
+}

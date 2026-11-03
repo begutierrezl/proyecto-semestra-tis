@@ -1,9 +1,11 @@
 import { useState } from "react";
 import api from "../api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, NavLink } from "react-router-dom";
 import { ACCESS_TOKEN, REFRESH_TOKEN } from "../constants";
-import "../styles/Form.css"
 import LoadingIndicator from "./LoadingIndicator";
+import "../styles/theme.css";
+import "../styles/Form.css"
+
 
 function Form({ route, method }) {
     const [username, setUsername] = useState("");
@@ -34,6 +36,7 @@ function Form({ route, method }) {
     };
 
     return (
+        <div className="form-div">
         <form onSubmit={handleSubmit} className="form-container">
             <h1>{name}</h1>
             <input
@@ -55,6 +58,10 @@ function Form({ route, method }) {
                 {name}
             </button>
         </form>
+        <NavLink to={name === "Login" ? "/register" : "/login"} className="form-button-navigate">
+            {name === "Login" ? "Register" : "Login"}
+        </NavLink>
+        </div>
     );
 }
 

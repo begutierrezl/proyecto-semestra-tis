@@ -1,0 +1,313 @@
+.formulario-valoracion-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin: 30px auto;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  max-width: 680px;
+  width: 90%;
+  background-color: var(--dominante);
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  box-sizing: border-box;
+}
+
+.formulario-valoracion-container h2 {
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: var(--secundario-oscuro);
+  text-align: center;
+  font-size: 24px;
+}
+
+.formulario-valoracion {
+  width: 100%;
+}
+
+.campo-formulario {
+  margin-bottom: 18px;
+  display: flex;
+  flex-direction: column;
+}
+
+.campo-formulario label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #334155;
+  font-size: 14px;
+}
+
+.campo-formulario input {
+  padding: 10px 14px;
+  border: 1px solid #cfd4bf;
+  border-radius: 6px;
+  font-size: 14px;
+  box-sizing: border-box;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.campo-formulario input:focus {
+  outline: none;
+  border-color: var(--secundario);
+  box-shadow: 0 0 0 3px rgba(112, 130, 56, 0.25);
+}
+
+.campo-ayuda {
+  font-size: 12px;
+  color: #64748b;
+  margin-top: 4px;
+}
+
+/* ==========================================================================
+   R2.10: Tarjeta de detalle de la receta previo a la valoración
+   ========================================================================== */
+.receta-detalle-card {
+  margin: 20px 0;
+  padding: 20px;
+  background-color: var(--dominante);
+  border-radius: 8px;
+  border: 1px solid #e3e6d8;
+  box-sizing: border-box;
+}
+
+.receta-detalle-header {
+  border-bottom: 1px solid #e3e6d8;
+  padding-bottom: 12px;
+  margin-bottom: 14px;
+}
+
+.receta-badge-id {
+  display: inline-block;
+  background-color: var(--secundario-claro);
+  color: var(--secundario-oscuro);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 3px 8px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 6px;
+}
+
+.receta-titulo {
+  margin: 4px 0 8px 0;
+  color: #0f172a;
+  font-size: 18px;
+  font-weight: 700;
+}
+
+.receta-descripcion {
+  margin: 0;
+  color: #475569;
+  font-size: 13.5px;
+  line-height: 1.5;
+}
+
+.receta-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.receta-tag {
+  background-color: var(--dominante);
+  border: 1px solid #cfd4bf;
+  border-radius: 4px;
+  padding: 4px 10px;
+  font-size: 12px;
+  color: #334155;
+}
+
+.receta-seccion {
+  margin-top: 14px;
+}
+
+.receta-seccion h4 {
+  margin: 0 0 8px 0;
+  color: #1e293b;
+  font-size: 13.5px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+}
+
+.receta-ingredientes-lista {
+  margin: 0;
+  padding-left: 20px;
+  color: #334155;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.receta-instrucciones {
+  margin: 0;
+  color: #334155;
+  font-size: 13px;
+  line-height: 1.5;
+  background-color: var(--dominante);
+  padding: 10px 12px;
+  border-radius: 4px;
+  border: 1px solid #e3e6d8;
+}
+
+.receta-cargando {
+  padding: 15px;
+  background-color: var(--secundario-claro);
+  color: #64748b;
+  text-align: center;
+  font-size: 13px;
+  border-radius: 6px;
+  margin: 15px 0;
+}
+
+/* ==========================================================================
+   R2.2: Escala de Likert (Centrado y contención sin desbordamiento)
+   ========================================================================== */
+.likert-container {
+  margin: 25px 0;
+  padding: 20px 15px;
+  background-color: var(--dominante);
+  border-radius: 8px;
+  border: 1px solid #e3e6d8;
+  box-sizing: border-box;
+  width: 100%;
+}
+
+.likert-container fieldset.likertScale {
+  width: 100% !important;
+  box-sizing: border-box !important;
+  margin: 0 auto !important;
+  padding: 0 !important;
+  border: none !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+}
+
+.likert-container .likertLegend {
+  width: 100% !important;
+  text-align: center !important;
+  font-weight: 700 !important;
+  color: #1e293b !important;
+  margin-bottom: 22px !important;
+  font-size: 15px !important;
+}
+
+.likert-container .likertBand {
+  width: 100% !important;
+  display: flex !important;
+  justify-content: space-between !important;
+  box-sizing: border-box !important;
+  padding: 0 10px !important;
+}
+
+.likert-container .likertResponse {
+  flex: 1 !important;
+  text-align: center !important;
+  position: relative !important;
+}
+
+.likert-container .likertText {
+  font-size: 12px !important;
+  font-weight: 600 !important;
+  color: #334155 !important;
+  line-height: 1.3 !important;
+  padding-top: 10px !important;
+  display: inline-block !important;
+  width: 100% !important;
+  word-wrap: break-word !important;
+  box-sizing: border-box !important;
+}
+
+/* Botón de envío */
+.boton-valorar {
+  width: 100%;
+  padding: 13px;
+  background-color: var(--acento);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease-in-out, transform 0.1s;
+}
+
+.boton-valorar:hover:not(:disabled) {
+  background-color: var(--acento-oscuro);
+}
+
+.boton-valorar:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.boton-valorar:disabled {
+  background-color: #94a3b8;
+  cursor: not-allowed;
+}
+
+/* Salida 2: Mensajes de respuesta */
+.mensaje-respuesta {
+  margin-top: 18px;
+  padding: 12px 16px;
+  border-radius: 6px;
+  text-align: center;
+  font-size: 14px;
+  font-weight: 500;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.mensaje-respuesta.success {
+  background-color: var(--secundario-claro);
+  color: var(--secundario-oscuro);
+  border: 1px solid #c9d3a8;
+}
+
+.mensaje-respuesta.error {
+  background-color: #fef2f2;
+  color: #991b1b;
+  border: 1px solid #fecaca;
+}
+
+/* Salida 1: Datos de confirmación */
+.salida-valoracion-card {
+  margin-top: 15px;
+  padding: 14px 18px;
+  background-color: var(--secundario-claro);
+  border: 1px solid #c9d3a8;
+  border-radius: 6px;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.salida-valoracion-card h4 {
+  margin: 0 0 8px 0;
+  color: var(--secundario-oscuro);
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.salida-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 6px 12px;
+  font-size: 13px;
+  color: var(--secundario-oscuro);
+}
+
+.enlace-volver {
+  margin-top: 22px;
+  display: inline-block;
+  color: var(--secundario);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.enlace-volver:hover {
+  text-decoration: underline;
+}
