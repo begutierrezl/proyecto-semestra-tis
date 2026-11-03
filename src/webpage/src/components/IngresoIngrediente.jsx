@@ -34,14 +34,20 @@ function Ingrediente({ i,register, errors ,setValue, eliminarIng, MENSAJES,minim
                     id="nombre_ingrediente"
                     {...register(`${nombre}.nombre_ingrediente`,
                         {
+			    //validaciones y mensajes de error R1.14 nombre_ingrediente R1.4
                             required : {
+				//valida que sea obligatoria
                                 value : true,
                                 message: `El nombre del ingrediente ${MENSAJES.obligatorio}`
                             },
                               validate: (value) => {
+				  //valida cantidad minima sin contar espacios
                                     if (!minimoSinEspacios(value, 3)) {
                                         return `El nombre del ingrediente ${MENSAJES.minimo(3)}`
                                     }
+				    //Expresion regular= todos los caracteres que no son letras,
+				    //espacios, 
+				    //ni vocales con tildes
                                     const invalidos = incluyeInvalidos(value, "[^\\w\\sñÑáéíóúÁÉÍÓÚ]")
                                     if (invalidos.length != 0)
                                     {
@@ -49,6 +55,7 @@ function Ingrediente({ i,register, errors ,setValue, eliminarIng, MENSAJES,minim
                                     }
                             },
                             maxLength: {
+				//valida max caracteres
                                 value: 80,
                                 message: `El nombre de la receta ${MENSAJES.maximo(80)}`
                             }
@@ -67,14 +74,19 @@ function Ingrediente({ i,register, errors ,setValue, eliminarIng, MENSAJES,minim
                     id="cantidad_ingrediente"
                     readOnly={unidad==="AL_GUSTO"}
                     {...register(`${nombre}.cantidad_ingrediente`,
+			//validaciones y mensajes de error R1.14 cantidad_ingrediente R1.5
                         {
+			    //obligatorio
                             required: `La cantidad del ingrediente ${MENSAJES.obligatorio}`,
+			    //valida que max 2 decimales
                             validate: (valor)=> compruebaDecimales(valor),
                             max:{
+				//valida max 1000
                                 value: 1000,
                                 message: `La cantidad del ingrediente ${MENSAJES.rangoCantidad}`
                             },
                             min:{
+				//valida minimo 0.01
                                 value:0.01,
                                 message: `La cantidad del ingrediente ${MENSAJES.rangoCantidad}`
                             }
@@ -89,10 +101,13 @@ function Ingrediente({ i,register, errors ,setValue, eliminarIng, MENSAJES,minim
                 Unidad de medida:
                 <select className="ingrediente-control" id="unidad_medida" 
                 {...register(`${nombre}.unidad_medida`,
+		    //validaciones y mensajes de error R1.14 unidad_medida R1.6
                     {
+			//obligatorio
                         required: `La unidad de medida ${MENSAJES.obligatorio}`,
  
                         onChange: (e) => {
+			    //En caso de que sea al gusto, sete cantidad en 1 R1.14
                             if (e.target.value === "AL_GUSTO") {
                                 setValue(`${nombre}.cantidad_ingrediente`, 1, { shouldValidate: true })
                             }
