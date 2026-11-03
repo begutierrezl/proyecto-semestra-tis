@@ -13,6 +13,7 @@ export default function FormularioValoracion() {
   const { idReceta: paramIdReceta } = useParams();
   const [searchParams] = useSearchParams();
 
+// obtencion de usuario mediante un jwt
   const getUsuarioInicial = () => {
     const token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
@@ -27,6 +28,7 @@ export default function FormularioValoracion() {
     return '';
   };
 
+  // obtencion id_receta 
   const getRecetaInicial = () => {
     const queryReceta = searchParams.get('idReceta') || searchParams.get('receta') || searchParams.get('id');
     return String(paramIdReceta || queryReceta || '');
@@ -225,42 +227,12 @@ export default function FormularioValoracion() {
 
   return (
     <div className="formulario-valoracion-container">
-      <h2>Valoración de Recetas</h2>
+      
       <form onSubmit={subirABaseDeDatos} className="formulario-valoracion">
         
-        {/* Entradas: ID_USUARIO (R2.1) */}
-        <div className="campo-formulario">
-          <label htmlFor="idUsuario">ID Usuario :</label>
-          <input 
-            type="number" 
-            id="idUsuario"
-            name="idUsuario" 
-            value={formData.idUsuario} 
-            onChange={handleChange} 
-            placeholder="Ej: 1"
-            min="1"
-            max="999999999999"
-            required
-          />
-          <span className="campo-ayuda">Identificador del usuario (máximo 12 dígitos).</span>
-        </div>
+        
 
-        {/* Entradas: ID_RECETA (R1.1) */}
-        <div className="campo-formulario">
-          <label htmlFor="idReceta">ID Receta :</label>
-          <input 
-            type="number" 
-            id="idReceta"
-            name="idReceta" 
-            value={formData.idReceta} 
-            onChange={handleChange} 
-            placeholder="Ej: 1"
-            min="1"
-            max="999999999999"
-            required
-          />
-          <span className="campo-ayuda">Identificador de la receta a valorar (máximo 12 dígitos).</span>
-        </div>
+       
 
         {/* R2.10: Despliegue automático del detalle completo de la receta antes de valorar */}
         {cargandoReceta && (
@@ -273,41 +245,7 @@ export default function FormularioValoracion() {
           </div>
         )}
 
-        {recetaDetalle && (
-          <div className="receta-detalle-card">
-            <div className="receta-detalle-header">
-              <span className="receta-badge-id">Receta #{recetaDetalle.id}</span>
-              <h3 className="receta-titulo">{recetaDetalle.nombre_receta}</h3>
-              <p className="receta-descripcion">{recetaDetalle.descripcion_corta}</p>
-            </div>
-
-            <div className="receta-tags">
-              <span className="receta-tag"><strong>Categoría:</strong> {recetaDetalle.categoria}</span>
-              <span className="receta-tag"><strong>Régimen:</strong> {recetaDetalle.regimen_alimenticio}</span>
-              <span className="receta-tag"><strong>Porciones:</strong> {recetaDetalle.cantidad_personas} personas</span>
-            </div>
-
-            <div className="receta-seccion">
-              <h4>Ingredientes:</h4>
-              {recetaDetalle.ingrediente_receta && recetaDetalle.ingrediente_receta.length > 0 ? (
-                <ul className="receta-ingredientes-lista">
-                  {recetaDetalle.ingrediente_receta.map((ing, idx) => (
-                    <li key={idx}>
-                      <strong>{ing.nombre_ingrediente}</strong>: {ing.cantidad_ingrediente} {ing.unidad_medida}
-                    </li>
-                  ))}
-                </ul>
-              ) : (
-                <p className="campo-ayuda">Sin ingredientes registrados.</p>
-              )}
-            </div>
-
-            <div className="receta-seccion">
-              <h4>Instrucciones de preparación:</h4>
-              <p className="receta-instrucciones">{recetaDetalle.instrucciones_preparacion}</p>
-            </div>
-          </div>
-        )}
+        {r}
 
         {/* R2.2: Escala Likert de 5 puntos */}
         <div className="likert-container">
@@ -343,9 +281,7 @@ export default function FormularioValoracion() {
         </div>
       )}
 
-      <Link to="/" className="enlace-volver">
-        &larr; Volver al inicio
-      </Link>
+      
     </div>
   );
 }
