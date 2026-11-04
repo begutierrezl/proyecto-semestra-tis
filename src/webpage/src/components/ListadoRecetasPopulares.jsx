@@ -25,7 +25,7 @@ class Receta {
         this.nombreReceta = receta.nombre_receta;
         this.descripcionCorta = receta.descripcion_corta;
         this.ingredientes = receta.ingrediente_receta;
-        //this.imagenReferencial = receta.imagen_referencial;
+        this.imagenReferencial = receta.imagen_referencial;
         this.cantidadPersonas = receta.cantidad_personas;
         this.categoria = receta.categoria;
         this.regimen_alimenticio = receta.regimen_alimenticio;
@@ -48,7 +48,7 @@ class CalificacionReceta {
         this.nombreReceta = receta.nombreReceta;
         this.descripcionCorta = receta.descripcionCorta;
         this.ingredientes = receta.ingredientes;
-        //this.imagenReferencial = receta.imagenReferencial;
+        this.imagenReferencial = receta.imagenReferencial;
         this.cantidadPersonas = receta.cantidadPersonas;
         this.categoria = receta.categoria;
         this.regimen_alimenticio = receta.regimen_alimenticio;
