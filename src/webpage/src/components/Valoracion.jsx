@@ -229,23 +229,6 @@ export default function FormularioValoracion() {
     <div className="formulario-valoracion-container">
       
       <form onSubmit={subirABaseDeDatos} className="formulario-valoracion">
-        
-        
-
-       
-
-        {/* R2.10: Despliegue automático del detalle completo de la receta antes de valorar */}
-        {cargandoReceta && (
-          <div className="receta-cargando">Cargando detalles de la receta...</div>
-        )}
-
-        {errorReceta && (
-          <div className="mensaje-respuesta error">
-            {errorReceta}
-          </div>
-        )}
-
-        {r}
 
         {/* R2.2: Escala Likert de 5 puntos */}
         <div className="likert-container">
