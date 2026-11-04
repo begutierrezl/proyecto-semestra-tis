@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import "../styles/theme.css";
 import '../styles/BuscadorRecetas.css';
+import { Link } from 'react-router-dom';
 
 const BuscadorRecetas = () => {
     const [nombre, setNombre] = useState('');
@@ -63,28 +64,26 @@ const BuscadorRecetas = () => {
                     className="buscador-input"
                 />
 
-                <div className="filtros-fila">
-                    <select value={categoria} onChange={(e) => setCategoria(e.target.value)} className="buscador-select">
-                        <option value="">Cualquier Categoría</option>
-                        <option value="postres">Postres</option>
-                        <option value="ensaladas">Ensaladas</option>
-                        <option value="plato_fondo">Plato de fondo</option>
-                        <option value="sopas">Sopas</option>
-                        <option value="entradas">Entradas</option>
-                        <option value="bebidas">Bebidas</option>
-                        <option value="desayunos">Desayunos</option>
-                    </select>
+                <select value={categoria} onChange={(e) => setCategoria(e.target.value)} className="buscador-select">
+                    <option value="">Categoría</option>
+                    <option value="postres">Postres</option>
+                    <option value="ensaladas">Ensaladas</option>
+                    <option value="plato_fondo">Plato de fondo</option>
+                    <option value="sopas">Sopas</option>
+                    <option value="entradas">Entradas</option>
+                    <option value="bebidas">Bebidas</option>
+                    <option value="desayunos">Desayunos</option>
+                </select>
 
-                    <select value={regimen} onChange={(e) => setRegimen(e.target.value)} className="buscador-select">
-                        <option value="">Cualquier Régimen</option>
-                        <option value="normal">Normal</option>
-                        <option value="diabetico">Diabético</option>
-                        <option value="celiaco">Celíaco</option>
-                        <option value="vegetariano">Vegetariano</option>
-                        <option value="vegano">Vegano</option>
-                        <option value="sin_lactosa">Sin lactosa</option>
-                    </select>
-                </div>
+                <select value={regimen} onChange={(e) => setRegimen(e.target.value)} className="buscador-select">
+                    <option value="">Régimen</option>
+                    <option value="normal">Normal</option>
+                    <option value="diabetico">Diabético</option>
+                    <option value="celiaco">Celíaco</option>
+                    <option value="vegetariano">Vegetariano</option>
+                    <option value="vegano">Vegano</option>
+                    <option value="sin_lactosa">Sin lactosa</option>
+                </select>
 
                 <button type="submit" className="buscador-button">Buscar</button>
             </form>
@@ -97,7 +96,14 @@ const BuscadorRecetas = () => {
                         <h3 className="titulo-receta">{receta.nombre_receta}</h3>
                         <p><strong>Categoría:</strong> {formatoCategoria[receta.categoria]} | <strong>Régimen:</strong> {formatoRegimen[receta.regimen_alimenticio]}</p>
                         <p>{receta.descripcion_corta}</p>
-                        <a href={receta.enlace_receta} target="_blank" rel="noreferrer" className="receta-link">Ver Receta Completa</a>
+
+                        <div className="acciones-receta">
+                            <a href={receta.enlace_receta} target="_blank" rel="noreferrer" className="receta-link">Ver Receta Completa</a>
+
+                            <Link to={`/valoracion?idReceta=${receta.id}`} className="boton-valorar-link">
+                                Valorar
+                            </Link>
+                        </div>
                     </div>
                 ))}
             </div>
