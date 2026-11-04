@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import "../styles/theme.css";
 import '../styles/BuscadorRecetas.css';
-import { Link } from 'react-router-dom';
+import FormularioValoracion from './Valoracion';
 
 const BuscadorRecetas = () => {
     const [nombre, setNombre] = useState('');
@@ -10,6 +10,8 @@ const BuscadorRecetas = () => {
 
     const [resultados, setResultados] = useState([]);
     const [mensaje, setMensaje] = useState('');
+
+    const [recetaAValorar, setRecetaAValorar] = useState(null);
 
     const handleBuscar = async (e) => {
         e.preventDefault();
@@ -99,11 +101,20 @@ const BuscadorRecetas = () => {
 
                         <div className="acciones-receta">
                             <a href={receta.enlace_receta} target="_blank" rel="noreferrer" className="receta-link">Ver Receta Completa</a>
-
-                            <Link to={`/valoracion?idReceta=${receta.id}`} className="boton-valorar-link">
-                                Valorar
-                            </Link>
+                            <button 
+                                type="button"
+                                onClick={() => setRecetaAValorar(recetaAValorar === receta.id ? null : receta.id)} 
+                                className="boton-valorar-link"
+                            >
+                                {recetaAValorar === receta.id ? 'Cancelar' : 'Valorar'}
+                            </button>
                         </div>
+
+                        {recetaAValorar === receta.id && (
+                            <div style={{ marginTop: '20px' }}>
+                                <FormularioValoracion idRecetaProp={receta.id} />
+                            </div>
+                        )}
                     </div>
                 ))}
             </div>
