@@ -25,12 +25,15 @@
 
 /* Imagen: ocupa todo el ancho y se recorta para no deformarse */
 .mostrarReceta-receta__imagen {
-    display: block;
-    width: 100%;
-    max-height: 360px;
+    display: grid;
+    width: 95%;
+    max-height: 360px;    
     margin-bottom: 20px;
-    border-radius: 8px;
-    object-fit: fill;
+    grid-template-columns: 1fr;
+    padding: 16px 16px;
+    border-radius: 20px;
+    align-content: center;
+    object-fit: cover;
 }
 
 .titulo-receta {
@@ -40,15 +43,6 @@
 .titulo-receta::first-letter {
     text-transform: capitalize;
 }
-
-
-/* ============================================================
-   Receta.css
-   Vista de detalle de una receta (componente Receta).
-   Mismo estilo que el resto de la app: tarjeta blanca con radio
-   de 8px y sombra suave, azul #007bff, borde azul a la izquierda
-   en los items.
-   ============================================================ */
 
 /* Tarjeta principal: todo el contenido de la receta */
 .mostrarReceta-receta {
@@ -88,7 +82,6 @@
     gap: 8px 16px;
     margin: 0 0 8px;
     padding: 14px 16px;
-    border-left: 5px solid #007bff;
     border-radius: 5px;
     background-color: #f9f9f9;
 }
@@ -125,13 +118,11 @@
     margin: 0;
     padding: 0;
     list-style: none;           /* quita los puntos de la lista */
+    text-indent: 3%;
 }
 
 .mostrarReceta-receta__ingredientes li {
-    padding: 10px 14px;
-    border-left: 5px solid #007bff;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+    padding: 5px 5px;
 }
 
 /* pre-line respeta los saltos de linea que escribio el usuario */

@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import api from "../api";
 import Navbar from "../components/NavBar.jsx"
 import FormularioValoracion from "../components/Valoracion.jsx";
+import AjusteIngredientes from "../components/AjusteIngredientes.jsx";
 import Calificacion from "../components/Calificacion.jsx";
 import "../styles/MostrarRecetaPagina.css";
 
@@ -78,6 +79,8 @@ function MostrarRecetaPagina() {
                         />
                     )}
                     <Calificacion calificacion={calificacion} />
+
+                    <AjusteIngredientes />
 
                     <FormularioValoracion />
 

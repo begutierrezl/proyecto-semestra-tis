@@ -3,7 +3,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin: 30px auto;
+  margin: 5px auto;
   padding: 30px;
   border-radius: 10px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
@@ -16,7 +16,6 @@
 
 .formulario-valoracion-container h2 {
   margin-top: 0;
-  margin-bottom: 20px;
   color: var(--secundario-oscuro);
   text-align: center;
   font-size: 24px;
@@ -167,11 +166,10 @@
    R2.2: Escala de Likert (Centrado y contención sin desbordamiento)
    ========================================================================== */
 .likert-container {
-  margin: 25px 0;
+  margin: 10px 0;
   padding: 20px 15px;
   background-color: var(--dominante);
   border-radius: 8px;
-  border: 1px solid #e3e6d8;
   box-sizing: border-box;
   width: 100%;
 }

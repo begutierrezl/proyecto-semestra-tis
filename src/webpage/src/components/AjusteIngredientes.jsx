@@ -134,31 +134,10 @@ function AjusteIngredientes() {
 
     return (
         <div className="ajuste-container">
-            <h1>Ajuste de ingredientes</h1>
-
             <form className="ajuste-form" onSubmit={ajustarReceta} noValidate>
-                <label htmlFor="id_receta">ID de la receta:</label>
+                <label className="ajuste-container-label" htmlFor="cantidad_personas">Cantidad de personas deseada:</label>
                 <input
-                    type="text"
-                    inputMode="numeric"
-                    id="id_receta"
-                    value={idTexto}
-                    onChange={(e) => setIdTexto(e.target.value)}
-                />
-
-                <label htmlFor="lista_recetas">O elegir una receta de la lista:</label>
-                <select id="lista_recetas" value={idEnLista ? idTexto.trim() : ""} onChange={cambiarReceta}>
-                    <option value="">Elegir receta</option>
-                    {recetas.map((r) => (
-                        <option key={r.id} value={String(r.id)}>
-                            {r.id} - {r.nombre_receta}
-                        </option>
-                    ))}
-                </select>
-                {errorLista && <p className="ajuste-error">{errorLista}</p>}
-
-                <label htmlFor="cantidad_personas">Cantidad de personas deseada:</label>
-                <input
+                    className="ajuste-form-input"
                     type="text"
                     inputMode="numeric"
                     id="cantidad_personas"
@@ -166,7 +145,7 @@ function AjusteIngredientes() {
                     onChange={(e) => setCantidadPersonas(e.target.value)}
                 />
 
-                <input type="submit" value={cargando ? "Calculando..." : "Ajustar"} disabled={cargando} />
+                <input className="ajuste-form-button" type="submit" value={cargando ? "Calculando..." : "Ajustar"} disabled={cargando} />
             </form>
 
             {/* Salida 2: mensajes de error (R4.1, R4.2 y R4.3) */}
@@ -175,12 +154,6 @@ function AjusteIngredientes() {
             {/* Salida 1 (R4.6): NOMBRE_RECETA, DESCRIPCION_CORTA, CATEGORIA y REGIMEN_ALIMENTICIO */}
             {resultado && (
                 <div className="ajuste-resultado">
-                    <h2>{resultado.nombre_receta}</h2>
-                    <p>{resultado.descripcion_corta}</p>
-                    <p className="ajuste-etiquetas">
-                        {resultado.categoria && <span>{resultado.categoria}</span>}
-                        {resultado.regimen_alimenticio && <span>{resultado.regimen_alimenticio}</span>}
-                    </p>
 
                     {/* R4.6: indica para cuantas personas son las cantidades.
                         R4.7: si es la cantidad original, muestra el mensaje correspondiente */}
@@ -205,10 +178,6 @@ function AjusteIngredientes() {
                             ))}
                         </tbody>
                     </table>
-
-                    {/* R4.6: INSTRUCCIONES_PREPARACION */}
-                    <h3>Instrucciones de preparación</h3>
-                    <p className="ajuste-instrucciones">{resultado.instrucciones_preparacion}</p>
                 </div>
             )}
         </div>
