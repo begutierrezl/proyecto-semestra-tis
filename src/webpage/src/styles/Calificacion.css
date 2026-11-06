@@ -1,0 +1,39 @@
+.calificacion {
+    background: var(--rp-color-fondo-tarjeta);
+    border: 1px solid var(--rp-color-borde);
+    border-radius: var(--rp-radio);
+    padding: var(--rp-espacio);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+}
+
+.calificacion__fila-principal {
+    display: flex;
+    flex-wrap: wrap;            
+    align-items: baseline;
+    gap: 0.25rem 0.75rem;
+}
+
+.calificacion__promedio {
+    font-weight: 700;
+    white-space: nowrap;
+}
+
+.calificacion__estrella {
+    margin-right: 0.2rem;
+    color: var(--rp-color-estrella);
+}
+
+.calificacion__cantidad {
+    color: var(--rp-color-texto-suave);
+    font-size: 0.9rem;
+    white-space: nowrap;
+}
+
+.calificacion__sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+}
