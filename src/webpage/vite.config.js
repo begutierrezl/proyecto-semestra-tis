@@ -14,14 +14,6 @@ export default defineConfig({
     watch: {
       usePolling: true,
       interval: 500
-    },
-    // AQUÍ ESTÁ EL PUENTE HACIA DJANGO
-    proxy: {
-      '/api': {
-        target: 'http://backend:8000',
-        changeOrigin: true,
-        secure: false,
-      }
     }
   }
 })
