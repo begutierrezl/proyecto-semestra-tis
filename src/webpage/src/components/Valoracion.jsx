@@ -7,13 +7,14 @@ import { jwtDecode } from 'jwt-decode';
 import "../styles/theme.css";
 import '../styles/Valoracion.css';
 
+
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-export default function FormularioValoracion() {
+export default function FormularioValoracion({ idRecetaProp }) {
   const { idReceta: paramIdReceta } = useParams();
   const [searchParams] = useSearchParams();
 
-// obtencion de usuario mediante un jwt
+  // obtencion de usuario mediante un jwt
   const getUsuarioInicial = () => {
     const token = localStorage.getItem(ACCESS_TOKEN);
     if (token) {
@@ -30,6 +31,8 @@ export default function FormularioValoracion() {
 
   // obtencion id_receta 
   const getRecetaInicial = () => {
+    if (idRecetaProp) return String(idRecetaProp);
+
     const queryReceta = searchParams.get('idReceta') || searchParams.get('receta') || searchParams.get('id');
     return String(paramIdReceta || queryReceta || '');
   };
@@ -227,7 +230,7 @@ export default function FormularioValoracion() {
 
   return (
     <div className="formulario-valoracion-container">
-      
+
       <form onSubmit={subirABaseDeDatos} className="formulario-valoracion">
 
         {/* R2.2: Escala Likert de 5 puntos */}
@@ -235,8 +238,8 @@ export default function FormularioValoracion() {
           <Likert {...likertOptions} />
         </div>
 
-        <button 
-          type="submit" 
+        <button
+          type="submit"
           className="boton-valorar"
           disabled={cargando}
         >
@@ -264,7 +267,7 @@ export default function FormularioValoracion() {
         </div>
       )}
 
-      
+
     </div>
   );
 }
