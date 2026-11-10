@@ -12,7 +12,7 @@ const MENSAJES = {
     invalidos: (c) => `no es un ingreso valido, incluye caracteres no permitidos: ${c}`,
     numero: "no es un ingreso valido, Campo debe ser un numero",
     mayorACero: "no es un ingreso valido, debe ser mayor a cero.",
-    maxDecimales: "no es un ingreso valido, máximo 2 decimales.",
+    maxDecimales: "no es un ingreso valido, debe ser un numero con máximo 2 decimales.",
     tipoImagen: "no es un ingreso valido, solo se aceptan archivos JPG o PNG.",
     imagenGrande: "no es un ingreso valido, la imagen no puede superar los 5 MB.",
     rangoPersonas: "no es un ingreso valido, debe estar entre 1 y 100.",
@@ -239,7 +239,6 @@ function IngresoReceta() {
                 <label className="receta-etiqueta">
                     Cantidad de Personas:
                     <input className="receta-control"
-                        type="number"
                         id="cantidad_personas"
                         name="cantidad_personas"
                         {...register("cantidad_personas", {
@@ -261,7 +260,6 @@ function IngresoReceta() {
                             },
 			    //valida que sea un entero
                             validate: (value)=> compruebaEntero(value), 
-                            valueAsNumber: true //no deja continuar si no es numero
                         }
                     )
                     }
