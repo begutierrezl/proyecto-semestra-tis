@@ -10,9 +10,6 @@ function Navbar() {
         <NavLink to="/ingreso" className="navbar-boton">
           Ingresar receta
         </NavLink>
-        <NavLink to="/valoracion" className="navbar-boton">
-          Valorar receta
-        </NavLink>
       </div>
     </nav>
   );

@@ -254,18 +254,6 @@ export default function FormularioValoracion({ idRecetaProp }) {
         </div>
       )}
 
-      {/* Salida 1: Despliegue de datos de confirmación */}
-      {datosSalida && (
-        <div className="salida-valoracion-card">
-          <h4>Resumen de la Valoración Registrada :</h4>
-          <div className="salida-grid">
-            <div><strong>ID Valoración:</strong> {datosSalida.id_valoracion}</div>
-            <div><strong>ID Usuario:</strong> {datosSalida.id_usuario}</div>
-            <div><strong>ID Receta:</strong> {datosSalida.id_receta}</div>
-            <div><strong>Valoración emitida:</strong> {datosSalida.valoracion} / 5</div>
-          </div>
-        </div>
-      )}
 
 
     </div>
