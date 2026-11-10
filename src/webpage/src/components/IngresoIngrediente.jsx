@@ -69,8 +69,6 @@ function Ingrediente({ i,register, errors ,setValue, eliminarIng, MENSAJES,minim
             <label className="ingrediente-etiqueta">
                 Cantidad Ingrediente:
                 <input className="ingrediente-control"
-                    type="number"
-                    step="any"
                     id="cantidad_ingrediente"
                     readOnly={unidad==="AL_GUSTO"}
                     {...register(`${nombre}.cantidad_ingrediente`,
@@ -80,6 +78,12 @@ function Ingrediente({ i,register, errors ,setValue, eliminarIng, MENSAJES,minim
                             required: `La cantidad del ingrediente ${MENSAJES.obligatorio}`,
 			    //valida que max 2 decimales
                             validate: (valor)=> compruebaDecimales(valor),
+			    setValueAs: (value) =>
+			    {
+				//reemplaza la coma por el punto antes de validar ingreso
+				const valorPunto = value.replace(",",".");
+				return valorPunto;
+			    },
                             max:{
 				//valida max 1000
                                 value: 1000,
