@@ -73,7 +73,7 @@ class Receta(models.Model):
     # R1.7: 
     imagen_referencial = models.ImageField(
         upload_to="recetas/",
-        validators=[FileExtensionValidator(["jpg", "png"]),
+        validators=[FileExtensionValidator(["jpg","jpeg", "png"]),
                     validar_tamano_imagen],
 
     ) 
