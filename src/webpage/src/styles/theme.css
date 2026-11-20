@@ -5,8 +5,19 @@
   --secundario-claro: #E8EDD6;
   --acento: #E07A5F;             /* 10% botones y estado activo */
   --acento-oscuro: #C4624A;
+  --fuente-principal: Arial, sans-serif;
+}
+
+*, *::before, *::after {
+  font-family: var(--fuente-principal);
 }
 
 body {
   background-color: var(--dominante);
+  font-family: var(--fuente-principal);
+  margin: 0;
+}
+
+button, input, select, textarea {
+  font-family: var(--fuente-principal);
 }

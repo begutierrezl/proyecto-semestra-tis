@@ -1,12 +1,14 @@
+@media (max-width: 768px) {
+    .mostrarReceta-container {
+        flex-direction: column;
+    }
+}
+
 .mostrarReceta-container {
     display: flex;
     width: 100%;
     min-height: 100vh;
-}
-
-.mostrarReceta-receta {
-    width: 100%;
-    min-height: 100vh;
+    background-color: var(--dominante);
 }
 
 .mostrarReceta-listado,
@@ -16,21 +18,26 @@
     box-sizing: border-box;
 }
 
-/* Opcional: apilar en pantallas pequeñas (celulares) */
-@media (max-width: 768px) {
-    .home-container {
-        flex-direction: column;
-    }
+.mostrarReceta-receta {
+    width: 100%;
+    max-width: 720px;
+    min-height: 100vh;
+    margin: 0 auto;
+    padding: 24px;
+    background-color: var(--dominante);
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    color: #333;
+    box-sizing: border-box;
 }
 
-/* Imagen: ocupa todo el ancho y se recorta para no deformarse */
 .mostrarReceta-receta__imagen {
     display: grid;
     width: 95%;
-    max-height: 360px;    
+    max-height: 360px;
     margin-bottom: 20px;
     grid-template-columns: 1fr;
-    padding: 16px 16px;
+    padding: 16px;
     border-radius: 20px;
     align-content: center;
     object-fit: cover;
@@ -44,19 +51,6 @@
     text-transform: capitalize;
 }
 
-/* Tarjeta principal: todo el contenido de la receta */
-.mostrarReceta-receta {
-    max-width: 720px;           /* ancho maximo de la tarjeta */
-    margin: 0px auto;          /* 40px arriba/abajo, centrada horizontalmente */
-    padding: 24px;              /* espacio entre el borde y el contenido */
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
-    color: #333;
-}
-
-/* Titulo con el nombre de la receta */
 .mostrarReceta-receta__nombre {
     margin: 0 0 8px;
     font-size: 28px;
@@ -67,7 +61,6 @@
 .mostrarReceta-receta__nombre::first-letter {
     text-transform: capitalize;
 }
-
 
 .mostrarReceta-receta__descripcion {
     margin: 0 0 20px;
@@ -83,7 +76,8 @@
     margin: 0 0 8px;
     padding: 14px 16px;
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: var(--dominante);
+    border-left: 5px solid var(--secundario);
 }
 
 .mostrarReceta-receta__datos dt {
@@ -122,7 +116,7 @@
 }
 
 .mostrarReceta-receta__ingredientes li {
-    padding: 5px 5px;
+    padding: 5px;
 }
 
 /* pre-line respeta los saltos de linea que escribio el usuario */

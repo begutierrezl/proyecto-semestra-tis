@@ -3,7 +3,7 @@
     --rp-espacio: 1rem;
     --rp-radio: 10px;
 
-    --rp-color-fondo-tarjeta: #ffffff;
+    --rp-color-fondo-tarjeta: var(--dominante);
     --rp-color-borde: #dcdcdc;
     --rp-color-texto: #222222;
     --rp-color-texto-suave: #666666;
@@ -16,7 +16,7 @@
     margin: 0 auto;
     padding: var(--rp-espacio);
     color: var(--rp-color-texto);
-    font-family: Arial, sans-serif;
+    background-color: var(--dominante);
 }
 
 .recetas-populares__titulo {
@@ -49,20 +49,20 @@
 
 .receta-card__fila-principal {
     display: flex;
-    flex-wrap: wrap;            
+    flex-wrap: wrap;
     align-items: baseline;
     gap: 0.25rem 0.75rem;
 }
 
 .receta-card__nombre {
-    flex: 1 1 auto;             
+    flex: 1 1 auto;
     margin: 0;
     font-size: 1.25rem;
     text-transform: lowercase;
 }
 
 .receta-card__nombre::first-letter {
-    text-transform: uppercase;
+    text-transform: capitalize;
 }
 
 .receta-card__enlace {
@@ -111,7 +111,7 @@
     border: 1px solid var(--rp-color-boton);
     border-radius: 6px;
     background: transparent;
-    color: #b4513a;
+    color: var(--rp-color-boton);
     font-size: 0.95rem;
     cursor: pointer;
     align-self: center;
@@ -119,7 +119,7 @@
 
 .receta-card__boton:hover {
     background: var(--rp-color-boton);
-    color: #ffffff;
+    color: #fff;
 }
 
 .receta-card__boton:focus-visible {
@@ -175,5 +175,5 @@
 .receta-card__instrucciones {
     margin: 0;
     line-height: 1.6;
-    white-space: pre-line;      
+    white-space: pre-line;
 }

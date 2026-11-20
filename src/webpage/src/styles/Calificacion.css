@@ -11,7 +11,7 @@
 
 .calificacion__fila-principal {
     display: flex;
-    flex-wrap: wrap;            
+    flex-wrap: wrap;
     align-items: baseline;
     gap: 0.25rem 0.75rem;
 }

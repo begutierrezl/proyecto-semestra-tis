@@ -1,20 +1,11 @@
-/* ============================================================
-   Receta.css
-   Vista de detalle de una receta (componente Receta).
-   Mismo estilo que el resto de la app: tarjeta blanca con radio
-   de 8px y sombra suave, azul #007bff, borde azul a la izquierda
-   en los items.
-   ============================================================ */
-
 /* Tarjeta principal: todo el contenido de la receta */
 .mostrar-receta {
     max-width: 720px;           /* ancho maximo de la tarjeta */
     margin: 40px auto;          /* 40px arriba/abajo, centrada horizontalmente */
     padding: 24px;              /* espacio entre el borde y el contenido */
-    background-color: #fff;
+    background-color: var(--dominante);
     border-radius: 8px;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    font-family: Arial, sans-serif;
     color: #333;
 }
 
@@ -48,9 +39,9 @@
     gap: 8px 16px;
     margin: 0 0 8px;
     padding: 14px 16px;
-    border-left: 5px solid #007bff;
+    border-left: 5px solid var(--secundario);
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: var(--dominante);
 }
 
 .mostrar-receta__datos dt {
@@ -89,9 +80,9 @@
 
 .mostrar-receta__ingredientes li {
     padding: 10px 14px;
-    border-left: 5px solid #007bff;
+    border-left: 5px solid var(--secundario);
     border-radius: 5px;
-    background-color: #f9f9f9;
+    background-color: var(--dominante);
 }
 
 /* pre-line respeta los saltos de linea que escribio el usuario */
