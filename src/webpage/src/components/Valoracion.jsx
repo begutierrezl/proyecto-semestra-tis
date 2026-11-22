@@ -10,7 +10,7 @@ import '../styles/Valoracion.css';
 
 const BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
-export default function FormularioValoracion({ idRecetaProp }) {
+export default function FormularioValoracion({ idRecetaProp, onValoracionEnviada }) {
   const { idReceta: paramIdReceta } = useParams();
   const [searchParams] = useSearchParams();
 
@@ -173,6 +173,7 @@ export default function FormularioValoracion({ idRecetaProp }) {
           valoracion: response.data.valoracion
         });
       }
+      onValoracionEnviada?.();
     } catch (err) {
       const errorData = err.response?.data;
 
@@ -195,6 +196,7 @@ export default function FormularioValoracion({ idRecetaProp }) {
               valoracion: updateResponse.data.valoracion
             });
           }
+          onValoracionEnviada?.();
         } catch (updateErr) {
           const updateData = updateErr.response?.data;
           setMensaje(updateData?.mensaje || updateData?.error || "Error al actualizar la valoración.");

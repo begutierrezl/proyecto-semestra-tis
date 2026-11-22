@@ -2,8 +2,8 @@ import "../styles/Calificacion.css"
 
 function Calificacion({ calificacion }) {
 
-    const n = (calificacion && calificacion.cantidad_valoraciones) === null ? 0 : calificacion.cantidad_valoraciones;
-    const promedio = (calificacion && calificacion.promedio_valoracion) === null ? 0 : calificacion.promedio_valoracion;
+    const n = calificacion?.cantidad_valoraciones ?? 0;
+    const promedio = calificacion?.promedio_valoracion ?? 0;
     return (
         <article className="calificacion">
             <div className="calificacion__fila-principal">

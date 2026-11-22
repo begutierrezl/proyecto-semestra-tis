@@ -82,7 +82,7 @@ function MostrarRecetaPagina() {
 
                     <AjusteIngredientes />
 
-                    <FormularioValoracion />
+                    <FormularioValoracion onValoracionEnviada={fetchCalificacion}/>
 
                 </div>
             </div>
