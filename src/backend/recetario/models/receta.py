@@ -1,3 +1,4 @@
+from decimal import Decimal
 from django.db import models
 from django.core.validators import (
   RegexValidator, 
@@ -72,7 +73,7 @@ class Receta(models.Model):
     # R1.7: 
     imagen_referencial = models.ImageField(
         upload_to="recetas/",
-        validators=[FileExtensionValidator(["jpg", "png"]),
+        validators=[FileExtensionValidator(["jpg","jpeg", "png"]),
                     validar_tamano_imagen],
 
     ) 
@@ -128,7 +129,7 @@ class Ingrediente(models.Model):
     # R1.5: blank=True porque con "al gusto" se completa sola (R1.14)
     cantidad_ingrediente = models.DecimalField(
         max_digits=10, decimal_places=2, 
-        validators=[MinValueValidator(0.01),MaxValueValidator(1000)],
+        validators=[MinValueValidator(Decimal("0.01")),MaxValueValidator(Decimal("1000"))],
     )
     UNIDADES = {
         "VACIO":"",

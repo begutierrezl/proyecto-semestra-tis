@@ -5,8 +5,6 @@ import RecetaCard from "./RecetaCalificacion";
 import "../styles/theme.css";
 import '../styles/ListadoRecetasPopulares.css';
 
-
-
 class Receta {
     constructor() {
         this.idReceta;
@@ -16,7 +14,7 @@ class Receta {
         this.imagenReferencial;
         this.cantidadPersonas;
         this.categoria;
-        this.regimen_alimenticio;
+        this.regimenAlimenticio;
         this.instruccionesPreparacion;
         this.enlaceReceta;
     }
@@ -28,7 +26,7 @@ class Receta {
         this.imagenReferencial = receta.imagen_referencial;
         this.cantidadPersonas = receta.cantidad_personas;
         this.categoria = receta.categoria;
-        this.regimen_alimenticio = receta.regimen_alimenticio;
+        this.regimenAlimenticio = receta.regimen_alimenticio;
         this.instruccionesPreparacion = receta.instrucciones_preparacion;
         this.enlaceReceta = receta.enlace_receta;
     }

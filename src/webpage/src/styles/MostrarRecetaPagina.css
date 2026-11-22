@@ -4,7 +4,7 @@
     min-height: 100vh;
 }
 
-.detalle-receta {
+.mostrarReceta-receta {
     width: 100%;
     min-height: 100vh;
 }
@@ -24,13 +24,16 @@
 }
 
 /* Imagen: ocupa todo el ancho y se recorta para no deformarse */
-.detalle-receta__imagen {
-    display: block;
-    width: 100%;
-    max-height: 360px;
+.mostrarReceta-receta__imagen {
+    display: grid;
+    width: 95%;
+    max-height: 360px;    
     margin-bottom: 20px;
-    border-radius: 8px;
-    object-fit: fill;
+    grid-template-columns: 1fr;
+    padding: 16px 16px;
+    border-radius: 20px;
+    align-content: center;
+    object-fit: cover;
 }
 
 .titulo-receta {
@@ -41,17 +44,8 @@
     text-transform: capitalize;
 }
 
-
-/* ============================================================
-   Receta.css
-   Vista de detalle de una receta (componente Receta).
-   Mismo estilo que el resto de la app: tarjeta blanca con radio
-   de 8px y sombra suave, azul #007bff, borde azul a la izquierda
-   en los items.
-   ============================================================ */
-
 /* Tarjeta principal: todo el contenido de la receta */
-.detalle-receta {
+.mostrarReceta-receta {
     max-width: 720px;           /* ancho maximo de la tarjeta */
     margin: 0px auto;          /* 40px arriba/abajo, centrada horizontalmente */
     padding: 24px;              /* espacio entre el borde y el contenido */
@@ -63,53 +57,52 @@
 }
 
 /* Titulo con el nombre de la receta */
-.detalle-receta__nombre {
+.mostrarReceta-receta__nombre {
     margin: 0 0 8px;
     font-size: 28px;
     color: #333;
     text-transform: lowercase;
 }
 
-.detalle-receta__nombre::first-letter {
+.mostrarReceta-receta__nombre::first-letter {
     text-transform: capitalize;
 }
 
 
-.detalle-receta__descripcion {
+.mostrarReceta-receta__descripcion {
     margin: 0 0 20px;
     color: #555;
     line-height: 1.5;
 }
 
 /* Datos (personas, categoria, regimen): etiqueta a la izquierda, valor a la derecha */
-.detalle-receta__datos {
+.mostrarReceta-receta__datos {
     display: grid;
     grid-template-columns: auto 1fr;
     gap: 8px 16px;
     margin: 0 0 8px;
     padding: 14px 16px;
-    border-left: 5px solid #007bff;
     border-radius: 5px;
     background-color: #f9f9f9;
 }
 
-.detalle-receta__datos dt {
+.mostrarReceta-receta__datos dt {
     font-weight: bold;
     color: #333;
 }
 
-.detalle-receta__datos dd {
+.mostrarReceta-receta__datos dd {
     margin: 0;                  /* los <dd> traen un margen por defecto */
     color: #555;
 }
 
 /* Pone en mayuscula solo la primera letra ("plato fondo" -> "Plato fondo") */
-.detalle-receta__datos dd::first-letter {
+.mostrarReceta-receta__datos dd::first-letter {
     text-transform: uppercase;
 }
 
 /* "Ingredientes" e "Instrucciones de preparacion" */
-.detalle-receta__subtitulo {
+.mostrarReceta-receta__subtitulo {
     margin: 24px 0 12px;
     padding-top: 18px;
     border-top: 1px solid #e5e5e5;
@@ -118,24 +111,22 @@
 }
 
 /* Lista de ingredientes: una tarjeta gris por ingrediente */
-.detalle-receta__ingredientes {
+.mostrarReceta-receta__ingredientes {
     display: flex;
     flex-direction: column;
     gap: 8px;
     margin: 0;
     padding: 0;
     list-style: none;           /* quita los puntos de la lista */
+    text-indent: 3%;
 }
 
-.detalle-receta__ingredientes li {
-    padding: 10px 14px;
-    border-left: 5px solid #007bff;
-    border-radius: 5px;
-    background-color: #f9f9f9;
+.mostrarReceta-receta__ingredientes li {
+    padding: 5px 5px;
 }
 
 /* pre-line respeta los saltos de linea que escribio el usuario */
-.detalle-receta__instrucciones {
+.mostrarReceta-receta__instrucciones {
     margin: 0;
     line-height: 1.6;
     white-space: pre-line;

@@ -1,7 +1,8 @@
 import React from "react";
 import { useState } from "react";
+import MostrarRecetaDetalle from "./MostrarRecetaDetalle";
 
-function RecetaCard({ receta }) {
+function RecetaCard({ receta, no_button = false }) {
     const [abierto, setAbierto] = useState(false);
     const idDetalles = `detalles-receta-${receta.idReceta}`;
     const n = receta.cantidadValoraciones;
@@ -47,39 +48,13 @@ function RecetaCard({ receta }) {
                 aria-expanded={abierto}
                 aria-controls={idDetalles}
                 onClick={() => setAbierto((prev) => !prev)}
+                hidden={no_button}
             >
                 {abierto ? "Ocultar detalles" : "Ver detalles"}
             </button>
 
             <div id={idDetalles} className="receta-card__detalles" hidden={!abierto}>
-                {receta.imagenReferencial && (
-                    <img
-                        className="receta-card__imagen"
-                        src={receta.imagenReferencial}
-                        alt={`Imagen referencial de ${receta.nombreReceta}`}
-                    />
-                )}
-
-                <dl className="receta-card__datos">
-                    <dt>Para</dt>
-                    <dd>{receta.cantidadPersonas} personas</dd>
-                    <dt>Categoría</dt>
-                    <dd>{receta.categoria}</dd>
-                    <dt>Régimen alimenticio</dt>
-                    <dd>{receta.regimen_alimenticio}</dd>
-                </dl>
-
-                <h3 className="receta-card__subtitulo">Ingredientes</h3>
-                <ul className="receta-card__ingredientes">
-                    {(receta.ingredientes ?? []).map((ing, i) => (
-                        <li key={i}>
-                            {ing.nombre_ingrediente}: {ing.cantidad_ingrediente} {ing.unidad_medida}
-                        </li>
-                    ))}
-                </ul>
-
-                <h3 className="receta-card__subtitulo">Instrucciones de preparación</h3>
-                <p className="receta-card__instrucciones">{receta.instruccionesPreparacion}</p>
+                <MostrarRecetaDetalle receta={receta}/>
             </div>
         </article>
     );
